@@ -1,25 +1,28 @@
 {
     "format_version": 2,
-    "tooth": "my-mod",
-    "version": "0.0.0",
+    "tooth": "github.com/engsr6982/PLand-LegacyRemoteCallApi",
+    "version": "0.2.1",
     "info": {
-        "name": "My Mod Name",
-        "description": "My Mod Description",
-        "author": "My Name",
+        "name": "PLand-LegacyRemoteCallApi",
+        "description": "LegacyRemoteCallApi for PLand",
+        "author": "engsr6982",
         "tags": [
             "platform:levilamina",
-            "type:mod"
+            "type:mod",
+            "pland",
+            "pland:library"
         ]
     },
-    "asset_url": "My Asset Url",
+    "asset_url": "https://github.com/engsr6982/PLand-LegacyRemoteCallApi/releases/download/v0.2.1/PLand-LegacyRemoteCallApi-windows-x64.zip",
     "prerequisites": {
-        "github.com/LiteLDev/LeviLamina": "My LeviLamina Dependency Version"
+        "github.com/LiteLDev/LeviLamina": "0.13.5",
+        "github.com/engsr6982/PLand": ">=0.2.1 <0.3.0"
     },
     "files": {
         "place": [
             {
-                "src": "my-mod/*",
-                "dest": "plugins/my-mod/"
+                "src": "PLand-LegacyRemoteCallApi/*",
+                "dest": "plugins/PLand-LegacyRemoteCallApi/"
             }
         ]
     }

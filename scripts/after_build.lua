@@ -102,6 +102,10 @@ function pack_mod(target,mod_define)
             os.cp(oripdbfile, pdbfile)
         end
 
+        local ts = path.join(os.projectdir(), "ts")
+        os.mkdir(path.join(outputdir, "ts"))
+        os.cp(ts, outputdir)
+
         formattedmanifest = string_formatter(manifest, mod_define)
         io.writefile(manifestfile,formattedmanifest)
         cprint("${bright green}[mod Packer]: ${reset}mod already generated to " .. outputdir)
