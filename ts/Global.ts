@@ -26,4 +26,11 @@ export const LDAPI_IMPORTS = {
   PLand_getLands2: ll.imports(Global_NameSpace, "PLand_getLands2"),
   PLand_getLands3: ll.imports(Global_NameSpace, "PLand_getLands3"),
   PLand_getPermType: ll.imports(Global_NameSpace, "PLand_getPermType"),
+  PLand_getLandAt: ll.imports(Global_NameSpace, "PLand_getLandAt"),
+  PLand_getLandAt1: ll.imports(Global_NameSpace, "PLand_getLandAt1"),
+  PLand_getLandAt2: ll.imports(Global_NameSpace, "PLand_getLandAt2"),
+  PLand_refreshLandRange: ll.imports(
+    Global_NameSpace,
+    "PLand_refreshLandRange"
+  ),
 };

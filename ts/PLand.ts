@@ -2,13 +2,13 @@
 import { LandID, LandPermType, LDAPI_IMPORTS, UUIDs } from "./Global.js";
 
 type Js_Type =
-  | "string"
-  | "number"
-  | "boolean"
-  | "object"
-  | "function"
-  | "symbol"
-  | "undefined";
+  | "String"
+  | "Number"
+  | "Boolean"
+  | "Object"
+  | "Function"
+  | "Symbol"
+  | "Undefined";
 const IsType = (obj: any, type: Js_Type) =>
   Object.prototype.toString.call(obj) === `[object ${type}]`;
 
@@ -21,6 +21,10 @@ export class LandData {
    */
   constructor(landID: LandID) {
     this.mLandID = landID;
+  }
+
+  getLandID(): LandID {
+    return this.mLandID;
   }
 }
 
@@ -69,20 +73,20 @@ export class PLand {
       return LDAPI_IMPORTS.PLand_getLands().map(
         (id: LandID) => new LandData(id)
       );
-    } else if (args.length === 1 && IsType(args[0], "number")) {
+    } else if (args.length === 1 && IsType(args[0], "Number")) {
       // getLands(LandDimid dimid) const;
       return LDAPI_IMPORTS.PLand_getLands1(args[0]).map(
         (id: LandID) => new LandData(id)
       );
-    } else if (args.length === 1 && IsType(args[0], "string")) {
+    } else if (args.length === 1 && IsType(args[0], "String")) {
       // getLands(UUIDs const& uuid) const;
       return LDAPI_IMPORTS.PLand_getLands2(args[0]).map(
         (id: LandID) => new LandData(id)
       );
     } else if (
       args.length === 2 &&
-      IsType(args[0], "string") &&
-      IsType(args[1], "number")
+      IsType(args[0], "String") &&
+      IsType(args[1], "Number")
     ) {
       // getLands(UUIDs const& uuid, LandDimid dimid) const;
       return LDAPI_IMPORTS.PLand_getLands3(args[0], args[1]).map(
@@ -99,5 +103,42 @@ export class PLand {
     ignoreOperator = false
   ): LandPermType {
     return LDAPI_IMPORTS.PLand_getPermType(uuid, landID, ignoreOperator);
+  }
+
+  /**
+   * getLandAt(intPos) // 查询指定位置所在领地 返回 LandData / null
+   * getLandAt(intPos, radius) // 查询圆形区域内领地 返回 LandData[]
+   * getLandAt(intPos, intPos) // 查询矩形区域内领地 返回 LandData[]
+   */
+  static getLandAt(...args): LandData | null | LandData[] {
+    if (args.length === 1 && IsType(args[0], "Object")) {
+      const id = LDAPI_IMPORTS.PLand_getLandAt(args[0]);
+      if (id === -1) {
+        return null;
+      }
+      return new LandData(id);
+    } else if (
+      args.length === 2 &&
+      IsType(args[0], "Object") &&
+      IsType(args[1], "Number")
+    ) {
+      return LDAPI_IMPORTS.PLand_getLandAt1(args[0], args[1]).map(
+        (id: LandID) => new LandData(id)
+      );
+    } else if (
+      args.length === 2 &&
+      IsType(args[0], "Object") &&
+      IsType(args[1], "Object")
+    ) {
+      return LDAPI_IMPORTS.PLand_getLandAt2(args[0], args[1]).map(
+        (id: LandID) => new LandData(id)
+      );
+    } else {
+      throw new Error("Invalid arguments");
+    }
+  }
+
+  static refreshLandRange(land: LandData): boolean {
+    return LDAPI_IMPORTS.PLand_refreshLandRange(land.getLandID());
   }
 }
