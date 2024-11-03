@@ -1,4 +1,5 @@
 #include "RemoteCallAPI.h"
+#include "mc/math/Vec3.h"
 #include "mc/world/level/BlockPos.h"
 #include "pland/Global.h"
 #include "pland/LandData.h"
@@ -11,8 +12,8 @@
 using string            = std::string;
 static string NAMESPACE = "PLand_LDAPI";
 
-using IntPos   = std::pair<BlockPos, int>;   // pos, dimid
-using FloatPos = std::pair<BlockPos, float>; // pos, dimid
+using IntPos   = std::pair<BlockPos, int>; // pos, dimid
+using FloatPos = std::pair<Vec3, float>;   // pos, dimid
 
 
 void Export_Class_PLand() {
