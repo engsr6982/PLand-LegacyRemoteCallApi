@@ -33,4 +33,37 @@ export const LDAPI_IMPORTS = {
     Global_NameSpace,
     "PLand_refreshLandRange"
   ),
+  // LandData
+  LandData_version: ll.imports(Global_NameSpace, "LandData_version"),
+  LandData_mLandID: ll.imports(Global_NameSpace, "LandData_mLandID"),
+  LandData_mLandDimid: ll.imports(Global_NameSpace, "LandData_mLandDimid"),
+  LandData_mIs3DLand: ll.imports(Global_NameSpace, "LandData_mIs3DLand"),
+  LandData_mLandPermTable: ll.imports(
+    Global_NameSpace,
+    "LandData_mLandPermTable"
+  ),
+  LandData_mLandOwner: ll.imports(Global_NameSpace, "LandData_mLandOwner"),
+  LandData_mLandMembers: ll.imports(Global_NameSpace, "LandData_mLandMembers"),
+  LandData_mLandName: ll.imports(Global_NameSpace, "LandData_mLandName"),
+  LandData_mLandDescribe: ll.imports(
+    Global_NameSpace,
+    "LandData_mLandDescribe"
+  ),
+  LandData_mIsSaleing: ll.imports(Global_NameSpace, "LandData_mIsSaleing"),
+  LandData_mSalePrice: ll.imports(Global_NameSpace, "LandData_mSalePrice"),
+  LandData_mOriginalBuyPrice: ll.imports(
+    Global_NameSpace,
+    "LandData_mOriginalBuyPrice"
+  ),
 };
+
+export type Js_Type =
+  | "String"
+  | "Number"
+  | "Boolean"
+  | "Object"
+  | "Function"
+  | "Symbol"
+  | "Undefined";
+export const IsType = (obj: any, type: Js_Type) =>
+  Object.prototype.toString.call(obj) === `[object ${type}]`;
