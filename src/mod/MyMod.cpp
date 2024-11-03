@@ -13,6 +13,10 @@ MyMod& MyMod::getInstance() { return *instance; }
 bool MyMod::load() {
     getSelf().getLogger().debug("Loading...");
     // Code for loading the mod goes here.
+
+    extern void ExportLDAPI();
+    ExportLDAPI();
+
     return true;
 }
 
