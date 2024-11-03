@@ -13,7 +13,7 @@ using string            = std::string;
 static string NAMESPACE = "PLand_LDAPI";
 
 using IntPos   = std::pair<BlockPos, int>; // pos, dimid
-using FloatPos = std::pair<Vec3, float>;   // pos, dimid
+using FloatPos = std::pair<Vec3, int>;     // pos, dimid
 
 
 void Export_Class_PLand() {
