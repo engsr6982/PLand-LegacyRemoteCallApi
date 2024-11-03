@@ -1,17 +1,20 @@
 add_rules("mode.debug", "mode.release")
 
 add_repositories("liteldev-repo https://github.com/LiteLDev/xmake-repo.git")
+add_repositories("engsr6982-repo https://github.com/engsr6982/xmake-repo.git")
 
 -- add_requires("levilamina x.x.x") for a specific version
 -- add_requires("levilamina develop") to use develop version
 -- please note that you should add bdslibrary yourself if using dev version
-add_requires("levilamina")
+add_requires("levilamina 0.13.5")
+add_requires("pland 0.2.1")
+add_requires("legacyremotecall 0.8.3")
 
 if not has_config("vs_runtime") then
     set_runtimes("MD")
 end
 
-target("my-mod") -- Change this to your mod name.
+target("PLand-LegacyRemoteCallApi") -- Change this to your mod name.
     add_cxflags(
         "/EHa",
         "/utf-8",
@@ -26,7 +29,7 @@ target("my-mod") -- Change this to your mod name.
     add_defines("NOMINMAX", "UNICODE")
     add_files("src/**.cpp")
     add_includedirs("src")
-    add_packages("levilamina")
+    add_packages("levilamina", "pland", "legacyremotecall")
     add_shflags("/DELAYLOAD:bedrock_server.dll") -- To use symbols provided by SymbolProvider.
     set_exceptions("none") -- To avoid conflicts with /EHa.
     set_kind("shared")
