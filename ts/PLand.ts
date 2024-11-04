@@ -5,6 +5,7 @@ import {
   LDAPI_IMPORTS,
   UUIDs,
   IsType,
+  Global_NameSpace,
 } from "./Global.js";
 
 export type LandPermTable = {
@@ -251,5 +252,92 @@ export class PLand {
   static refreshLandRange(land: LandData): boolean {
     // @ts-ignore
     return LDAPI_IMPORTS.PLand_refreshLandRange(land.unique_id);
+  }
+}
+
+// Event 实现
+export type EventType =
+  | "PlayerEnterLandEvent"
+  | "PlayerLeaveLandEvent"
+  | "PlayerAskCreateLandBeforeEvent"
+  | "PlayerAskCreateLandAfterEvent"
+  | "PlayerBuyLandBeforeEvent"
+  | "PlayerBuyLandAfterEvent"
+  | "PlayerDeleteLandBeforeEvent"
+  | "PlayerDeleteLandAfterEvent"
+  | "LandMemberChangeBeforeEvent"
+  | "LandMemberChangeAfterEvent"
+  | "LandOwnerChangeBeforeEvent"
+  | "LandOwnerChangeAfterEvent"
+  | "LandRangeChangeBeforeEvent"
+  | "LandRangeChangeAfterEvent";
+
+type EventParams = {
+  PlayerEnterLandEvent: [player: Player, landID: LandID];
+  PlayerLeaveLandEvent: [player: Player, landID: LandID];
+  PlayerAskCreateLandBeforeEvent: [player: Player];
+  PlayerAskCreateLandAfterEvent: [player: Player, is3DLand: boolean];
+  PlayerBuyLandBeforeEvent: [
+    player: Player,
+    price: number,
+    posA: IntPos,
+    posB: IntPos,
+    is3DLand: boolean
+  ];
+  PlayerBuyLandAfterEvent: [player: Player, landID: LandID];
+  PlayerDeleteLandBeforeEvent: [
+    player: Player,
+    landID: LandID,
+    refundPrice: number
+  ];
+  PlayerDeleteLandAfterEvent: [player: Player, landID: LandID];
+  LandMemberChangeBeforeEvent: [
+    player: Player,
+    targetPlayer: UUIDs, // 目标玩家 (被添加/移除的玩家)
+    landID: LandID,
+    isAdd: boolean
+  ];
+  LandMemberChangeAfterEvent: [
+    player: Player,
+    targetPlayer: UUIDs, // 目标玩家 (被添加/移除的玩家)
+    landID: LandID,
+    isAdd: boolean
+  ];
+  LandOwnerChangeBeforeEvent: [playe: Player, newOwner: Player, landID: LandID];
+  LandOwnerChangeAfterEvent: [playe: Player, newOwner: Player, landID: LandID];
+  LandRangeChangeBeforeEvent: [
+    player: Player,
+    landID: LandID,
+    newPosA: IntPos, // 新的范围A点
+    newPosB: IntPos, // 新范围B点
+    needPay: number, // 需要支付的金额
+    refundPrice: number // 退款的金额
+  ];
+  LandRangeChangeAfterEvent: [
+    player: Player,
+    landID: LandID,
+    newPosA: IntPos, // 新的范围A点
+    newPosB: IntPos, // 新范围B点
+    needPay: number, // 需要支付的金额
+    refundPrice: number // 退款的金额
+  ];
+};
+
+export class LDEvent {
+  constructor() {
+    throw new Error("LDEvent is a static class");
+  }
+
+  static listen<T extends EventType>(
+    event: T,
+    callback: (...args: EventParams[T]) => boolean
+  ): boolean {
+    const id = LDAPI_IMPORTS.ScriptEventManager_genListenerID();
+    ll.exports(callback, event, id);
+    const ok = LDAPI_IMPORTS.Event_RegisterListener(event, id);
+    if (!ok) {
+      throw new Error("Failed to register listener for event " + event);
+    }
+    return ok;
   }
 }

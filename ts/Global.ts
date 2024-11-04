@@ -55,6 +55,16 @@ export const LDAPI_IMPORTS = {
     Global_NameSpace,
     "LandData_mOriginalBuyPrice"
   ),
+
+  // Events
+  ScriptEventManager_genListenerID: ll.imports(
+    Global_NameSpace,
+    "ScriptEventManager_genListenerID"
+  ),
+  Event_RegisterListener: ll.imports(
+    Global_NameSpace,
+    "Event_RegisterListener"
+  ),
 };
 
 export type Js_Type =
