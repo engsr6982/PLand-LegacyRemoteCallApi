@@ -141,6 +141,98 @@ export class LandData {
   get mOriginalBuyPrice(): number {
     return LDAPI_IMPORTS.LandData_mOriginalBuyPrice(this.unique_id);
   }
+
+  getLandPos(): LandPos {
+    return this.mPos;
+  }
+  getLandID(): LandID {
+    return this.mLandID;
+  }
+  getLandDimid(): number {
+    return this.mLandDimid;
+  }
+  getSalePrice(): number {
+    return this.mSalePrice;
+  }
+  getLandPermTable(): LandPermTable | null {
+    return this.mLandPermTable;
+  }
+  getLandPermTableConst(): LandPermTable | null {
+    return this.mLandPermTable;
+  }
+  getLandOwner(): string {
+    return this.mLandOwner;
+  }
+  getLandMembers(): string[] {
+    return this.mLandMembers;
+  }
+  getLandName(): string {
+    return this.mLandName;
+  }
+  getLandDescribe(): string {
+    return this.mLandDescribe;
+  }
+
+  is3DLand(): boolean {
+    return this.mIs3DLand;
+  }
+  isLandOwner(uuid: UUIDs): boolean {
+    return this.mLandOwner === uuid;
+  }
+  isLandMember(uuid: UUIDs): boolean {
+    return this.mLandMembers.includes(uuid);
+  }
+  isSaleing(): boolean {
+    return this.mIsSaleing;
+  }
+
+  setSaleing(isSaleing: boolean): boolean {
+    return LDAPI_IMPORTS.LandData_setSaleing(this.unique_id, isSaleing);
+  }
+  setIs3DLand(is3D: boolean): boolean {
+    return LDAPI_IMPORTS.LandData_setIs3DLand(this.unique_id, is3D);
+  }
+  setLandOwner(uuid: string): boolean {
+    return LDAPI_IMPORTS.LandData_setLandOwner(this.unique_id, uuid);
+  }
+  setSalePrice(price: number): boolean {
+    return LDAPI_IMPORTS.LandData_setSalePrice(this.unique_id, price);
+  }
+  setLandName(name: string): boolean {
+    return LDAPI_IMPORTS.LandData_setLandName(this.unique_id, name);
+  }
+  setLandDescribe(describe: string): boolean {
+    return LDAPI_IMPORTS.LandData_setLandDescribe(this.unique_id, describe);
+  }
+
+  /**
+   * @private 更改领地范围
+   * @warning 更改后需要调用 `PLand.refreshLandRange()` 刷新缓存
+   */
+  _setLandPos(pos: LandPos): boolean {
+    return LDAPI_IMPORTS.LandData__setLandPos(
+      this.unique_id,
+      pos.mMin_A,
+      pos.mMax_B
+    );
+  }
+
+  addLandMember(uuid: string): boolean {
+    return LDAPI_IMPORTS.LandData_addLandMember(this.unique_id, uuid);
+  }
+  removeLandMember(uuid: string): boolean {
+    return LDAPI_IMPORTS.LandData_removeLandMember(this.unique_id, uuid);
+  }
+
+  isRadiusInLand(pos: IntPos, radius: number): boolean {
+    return LDAPI_IMPORTS.LandData_isRadiusInLand(this.unique_id, pos, radius);
+  }
+  isAABBInLand(pos1: IntPos, pos2: IntPos): boolean {
+    return LDAPI_IMPORTS.LandData_isAABBInLand(this.unique_id, pos1, pos2);
+  }
+  getPermType(uuid: UUIDs): LandPermType {
+    return LDAPI_IMPORTS.LandData_getPermType(this.unique_id, uuid);
+  }
 }
 
 export class PLand {

@@ -56,6 +56,30 @@ export const LDAPI_IMPORTS = {
     "LandData_mOriginalBuyPrice"
   ),
   LandData_mPos: ll.imports(Global_NameSpace, "LandData_mPos"),
+  LandData_setSaleing: ll.imports(Global_NameSpace, "LandData_setSaleing"),
+  LandData_setIs3DLand: ll.imports(Global_NameSpace, "LandData_setIs3DLand"),
+  LandData_setLandOwner: ll.imports(Global_NameSpace, "LandData_setLandOwner"),
+  LandData_setSalePrice: ll.imports(Global_NameSpace, "LandData_setSalePrice"),
+  LandData_setLandDescribe: ll.imports(
+    Global_NameSpace,
+    "LandData_setLandDescribe"
+  ),
+  LandData_addLandMember: ll.imports(
+    Global_NameSpace,
+    "LandData_addLandMember"
+  ),
+  LandData_removeLandMember: ll.imports(
+    Global_NameSpace,
+    "LandData_removeLandMember"
+  ),
+  LandData__setLandPos: ll.imports(Global_NameSpace, "LandData__setLandPos"),
+  LandData_isRadiusInLand: ll.imports(
+    Global_NameSpace,
+    "LandData_isRadiusInLand"
+  ),
+  LandData_isAABBInLand: ll.imports(Global_NameSpace, "LandData_isAABBInLand"),
+  LandData_getPermType: ll.imports(Global_NameSpace, "LandData_getPermType"),
+  LandData_setLandName: ll.imports(Global_NameSpace, "LandData_setLandName"),
 
   // Events
   ScriptEventManager_genListenerID: ll.imports(

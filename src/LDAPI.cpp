@@ -1,6 +1,5 @@
 #include "RemoteCallAPI.h"
 #include "ll/api/event/EventBus.h"
-#include "ll/api/event/Listener.h"
 #include "ll/api/event/ListenerBase.h"
 #include "ll/api/utils/HashUtils.h"
 #include "mc/math/Vec3.h"
@@ -12,11 +11,9 @@
 #include "pland/LandPos.h"
 #include "pland/PLand.h"
 #include "pland/utils/JSON.h"
-#include <cstdint>
 #include <memory>
 #include <unordered_map>
 #include <utility>
-#include <variant>
 #include <vector>
 
 
@@ -277,6 +274,68 @@ void Export_Class_LandData() {
             IntPos{land->mPos.mMin_A, land->mLandDimid},
             IntPos{land->mPos.mMax_B, land->mLandDimid}
         };
+    });
+
+    RemoteCall::exportAs(NAMESPACE, "LandData_setSaleing", [db](int id, bool isSale) -> bool {
+        auto land = db->getLand(id);
+        if (!land) return false;
+        return land->setSaleing(isSale);
+    });
+    RemoteCall::exportAs(NAMESPACE, "LandData_setIs3DLand", [db](int id, bool is3D) -> bool {
+        auto land = db->getLand(id);
+        if (!land) return false;
+        return land->setIs3DLand(is3D);
+    });
+    RemoteCall::exportAs(NAMESPACE, "LandData_setLandOwner", [db](int id, string const& uuid) -> bool {
+        auto land = db->getLand(id);
+        if (!land) return false;
+        return land->setLandOwner(uuid);
+    });
+    RemoteCall::exportAs(NAMESPACE, "LandData_setSalePrice", [db](int id, int price) -> bool {
+        auto land = db->getLand(id);
+        if (!land) return false;
+        return land->setSalePrice(price);
+    });
+    RemoteCall::exportAs(NAMESPACE, "LandData_setLandDescribe", [db](int id, string const& describe) -> bool {
+        auto land = db->getLand(id);
+        if (!land) return false;
+        return land->setLandDescribe(describe);
+    });
+    RemoteCall::exportAs(NAMESPACE, "LandData_setLandName", [db](int id, string const& name) -> bool {
+        auto land = db->getLand(id);
+        if (!land) return false;
+        return land->setLandName(name);
+    });
+    RemoteCall::exportAs(NAMESPACE, "LandData_addLandMember", [db](int id, string const& uuid) -> bool {
+        auto land = db->getLand(id);
+        if (!land) return false;
+        return land->addLandMember(uuid);
+    });
+    RemoteCall::exportAs(NAMESPACE, "LandData_removeLandMember", [db](int id, string const& uuid) -> bool {
+        auto land = db->getLand(id);
+        if (!land) return false;
+        return land->removeLandMember(uuid);
+    });
+    RemoteCall::exportAs(NAMESPACE, "LandData__setLandPos", [db](int id, IntPos const& a, IntPos const& b) -> bool {
+        auto land = db->getLand(id);
+        if (!land) return false;
+        return land->_setLandPos(land::LandPos::make(a.first, b.first));
+    });
+
+    RemoteCall::exportAs(NAMESPACE, "LandData_isRadiusInLand", [db](int id, IntPos const& pos, int radius) -> bool {
+        auto land = db->getLand(id);
+        if (!land) return false;
+        return land->isRadiusInLand(pos.first, radius);
+    });
+    RemoteCall::exportAs(NAMESPACE, "LandData_isAABBInLand", [db](int id, IntPos const& a, IntPos const& b) -> bool {
+        auto land = db->getLand(id);
+        if (!land) return false;
+        return land->isAABBInLand(a.first, b.first);
+    });
+    RemoteCall::exportAs(NAMESPACE, "LandData_getPermType", [db](int id, string const& uuid) -> int {
+        auto land = db->getLand(id);
+        if (!land) return -1;
+        return static_cast<int>(land->getPermType(uuid));
     });
 }
 
