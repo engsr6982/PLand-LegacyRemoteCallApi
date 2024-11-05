@@ -97,8 +97,12 @@ export class LandData {
   get version(): number {
     return LDAPI_IMPORTS.LandData_version(this.unique_id);
   }
-  get mPos() {
-    return null; // TODO: 导出 LandPos
+  get mPos(): LandPos {
+    const v = LDAPI_IMPORTS.LandData_mPos(this.unique_id);
+    if (v.length !== 2) {
+      throw new Error("Invalid LandPos");
+    }
+    return new LandPos(v[0], v[1]);
   }
   get mLandID(): number {
     return LDAPI_IMPORTS.LandData_mLandID(this.unique_id);
@@ -339,5 +343,97 @@ export class LDEvent {
       throw new Error("Failed to register listener for event " + event);
     }
     return ok;
+  }
+}
+
+export class LandPos {
+  mMin_A: IntPos;
+  mMax_B: IntPos;
+
+  constructor(pos_a: IntPos, pos_b: IntPos) {
+    this.mMin_A = pos_a;
+    this.mMax_B = pos_b;
+  }
+
+  fix(): void {
+    const v = LDAPI_IMPORTS.LandPos_fix(this.mMin_A, this.mMax_B);
+    this.mMin_A = v[0];
+    this.mMax_B = v[1];
+  }
+
+  getDepth(): number {
+    return LDAPI_IMPORTS.LandPos_getDepth(this.mMin_A, this.mMax_B);
+  }
+  getHeight(): number {
+    return LDAPI_IMPORTS.LandPos_getHeight(this.mMin_A, this.mMax_B);
+  }
+  getWidth(): number {
+    return LDAPI_IMPORTS.LandPos_getWidth(this.mMin_A, this.mMax_B);
+  }
+  getSquare(): number {
+    return LDAPI_IMPORTS.LandPos_getSquare(this.mMin_A, this.mMax_B);
+  }
+  getVolume(): number {
+    return LDAPI_IMPORTS.LandPos_getVolume(this.mMin_A, this.mMax_B);
+  }
+
+  toString(): string {
+    return LDAPI_IMPORTS.LandPos_toString(this.mMin_A, this.mMax_B);
+  }
+
+  /**
+   * 获取领地边框 (立体矩形)
+   * @returns 领地边框点列表
+   */
+  getBorder(): IntPos[] {
+    return LDAPI_IMPORTS.LandPos_getBorder(this.mMin_A, this.mMax_B);
+  }
+
+  /**
+   * 获取领地范围 (平面矩形)
+   * @returns 领地范围点列表
+   */
+  getRange(): IntPos[] {
+    return LDAPI_IMPORTS.LandPos_getRange(this.mMin_A, this.mMax_B);
+  }
+
+  hasPos(pos: IntPos, ignoreY = false): boolean {
+    return LDAPI_IMPORTS.LandPos_hasPos(this.mMin_A, this.mMax_B, pos, ignoreY);
+  }
+
+  /**
+   * 两个领地是否碰撞 (重合)
+   * @param pos1 领地1
+   * @param pos2 领地2
+   * @returns 是否碰撞
+   */
+  static isCollision(pos1: LandPos, pos2: LandPos): boolean {
+    return LDAPI_IMPORTS.LandPos_isCollision(
+      pos1.mMin_A,
+      pos1.mMax_B,
+      pos2.mMin_A,
+      pos2.mMax_B
+    );
+  }
+
+  /**
+   * 两个领地是否满足最小间距
+   * @param pos1 领地1
+   * @param pos2 领地2
+   * @param ignoreY 是否忽略Y轴
+   * @returns 是否满足最小间距
+   */
+  static isComplisWithMinSpacing(
+    pos1: LandPos,
+    pos2: LandPos,
+    ignoreY = false
+  ): boolean {
+    return LDAPI_IMPORTS.LandPos_isComplisWithMinSpacing(
+      pos1.mMin_A,
+      pos1.mMax_B,
+      pos2.mMin_A,
+      pos2.mMax_B,
+      ignoreY
+    );
   }
 }

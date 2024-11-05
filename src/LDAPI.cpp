@@ -9,12 +9,14 @@
 #include "pland/Global.h"
 #include "pland/LandData.h"
 #include "pland/LandEvent.h"
+#include "pland/LandPos.h"
 #include "pland/PLand.h"
 #include "pland/utils/JSON.h"
 #include <cstdint>
 #include <memory>
 #include <unordered_map>
 #include <utility>
+#include <variant>
 #include <vector>
 
 
@@ -116,6 +118,96 @@ void Export_Class_PLand() {
     });
 }
 
+
+void Export_Class_LandPos() {
+    static auto Make = [](IntPos const& a, IntPos const& b) { return land::LandPos::make(a.first, b.first); };
+
+    RemoteCall::exportAs(NAMESPACE, "LandPos_fix", [](IntPos const& a, IntPos const& b) -> std::vector<IntPos> {
+        auto p = Make(a, b);
+        p.fix();
+        std::vector<IntPos> res = {
+            IntPos{p.mMin_A, a.second},
+            IntPos{p.mMax_B, b.second}
+        };
+        return res;
+    });
+
+    RemoteCall::exportAs(NAMESPACE, "LandPos_getDepth", [](IntPos const& a, IntPos const& b) -> int {
+        auto p = Make(a, b);
+        return p.getDepth();
+    });
+    RemoteCall::exportAs(NAMESPACE, "LandPos_getHeight", [](IntPos const& a, IntPos const& b) -> int {
+        auto p = Make(a, b);
+        return p.getHeight();
+    });
+    RemoteCall::exportAs(NAMESPACE, "LandPos_getWidth", [](IntPos const& a, IntPos const& b) -> int {
+        auto p = Make(a, b);
+        return p.getWidth();
+    });
+    RemoteCall::exportAs(NAMESPACE, "LandPos_getSquare", [](IntPos const& a, IntPos const& b) -> int {
+        auto p = Make(a, b);
+        return p.getSquare();
+    });
+    RemoteCall::exportAs(NAMESPACE, "LandPos_getVolume", [](IntPos const& a, IntPos const& b) -> int {
+        auto p = Make(a, b);
+        return p.getVolume();
+    });
+
+    RemoteCall::exportAs(NAMESPACE, "LandPos_toString", [](IntPos const& a, IntPos const& b) -> string {
+        auto p = Make(a, b);
+        return p.toString();
+    });
+
+    RemoteCall::exportAs(NAMESPACE, "LandPos_getBorder", [](IntPos const& a, IntPos const& b) -> std::vector<IntPos> {
+        auto                p   = Make(a, b);
+        auto                res = p.getBorder();
+        std::vector<IntPos> li;
+        for (auto pos : res) {
+            li.push_back(IntPos{pos, a.second});
+        }
+        return li;
+    });
+    RemoteCall::exportAs(NAMESPACE, "LandPos_getRange", [](IntPos const& a, IntPos const& b) -> std::vector<IntPos> {
+        auto                p   = Make(a, b);
+        auto                res = p.getRange();
+        std::vector<IntPos> li;
+        for (auto pos : res) {
+            li.push_back(IntPos{pos, a.second});
+        }
+        return li;
+    });
+
+    RemoteCall::exportAs(
+        NAMESPACE,
+        "LandPos_hasPos",
+        [](IntPos const& a, IntPos const& b, IntPos const& pos, bool ignoreY) -> bool {
+            auto p = Make(a, b);
+            return p.hasPos(pos.first, ignoreY);
+        }
+    );
+
+
+    RemoteCall::exportAs(
+        NAMESPACE,
+        "LandPos_isCollision",
+        [](IntPos const& a, IntPos const& b, IntPos const& c, IntPos const& d) -> bool {
+            auto p1 = Make(a, b);
+            auto p2 = Make(c, d);
+            return land::LandPos::isCollision(p1, p2);
+        }
+    );
+    RemoteCall::exportAs(
+        NAMESPACE,
+        "LandPos_isComplisWithMinSpacing",
+        [](IntPos const& a, IntPos const& b, IntPos const& c, IntPos const& d, bool ignoreY) -> bool {
+            auto p1 = Make(a, b);
+            auto p2 = Make(c, d);
+            return land::LandPos::isComplisWithMinSpacing(p1, p2, ignoreY);
+        }
+    );
+}
+
+
 void Export_Class_LandData() {
     auto* db = &land::PLand::getInstance();
     RemoteCall::exportAs(NAMESPACE, "LandData_version", [db](int landID) -> int {
@@ -177,6 +269,14 @@ void Export_Class_LandData() {
         auto land = db->getLand(landID);
         if (!land) return -1;
         return land->mOriginalBuyPrice;
+    });
+    RemoteCall::exportAs(NAMESPACE, "LandData_mPos", [db](int landID) -> std::vector<IntPos> {
+        auto land = db->getLand(landID);
+        if (!land) return {};
+        return {
+            IntPos{land->mPos.mMin_A, land->mLandDimid},
+            IntPos{land->mPos.mMax_B, land->mLandDimid}
+        };
     });
 }
 
@@ -362,5 +462,6 @@ void Export_LDEvents() {
 void ExportLDAPI() {
     Export_Class_PLand();
     Export_Class_LandData();
+    Export_Class_LandPos();
     Export_LDEvents();
 }

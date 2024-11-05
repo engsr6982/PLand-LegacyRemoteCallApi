@@ -55,6 +55,7 @@ export const LDAPI_IMPORTS = {
     Global_NameSpace,
     "LandData_mOriginalBuyPrice"
   ),
+  LandData_mPos: ll.imports(Global_NameSpace, "LandData_mPos"),
 
   // Events
   ScriptEventManager_genListenerID: ll.imports(
@@ -64,6 +65,23 @@ export const LDAPI_IMPORTS = {
   Event_RegisterListener: ll.imports(
     Global_NameSpace,
     "Event_RegisterListener"
+  ),
+
+  // LandPos
+  LandPos_fix: ll.imports(Global_NameSpace, "LandPos_fix"),
+  LandPos_getDepth: ll.imports(Global_NameSpace, "LandPos_getDepth"),
+  LandPos_getHeight: ll.imports(Global_NameSpace, "LandPos_getHeight"),
+  LandPos_getWidth: ll.imports(Global_NameSpace, "LandPos_getWidth"),
+  LandPos_getSquare: ll.imports(Global_NameSpace, "LandPos_getSquare"),
+  LandPos_getVolume: ll.imports(Global_NameSpace, "LandPos_getVolume"),
+  LandPos_toString: ll.imports(Global_NameSpace, "LandPos_toString"),
+  LandPos_getBorder: ll.imports(Global_NameSpace, "LandPos_getBorder"),
+  LandPos_getRange: ll.imports(Global_NameSpace, "LandPos_getRange"),
+  LandPos_hasPos: ll.imports(Global_NameSpace, "LandPos_hasPos"),
+  LandPos_isCollision: ll.imports(Global_NameSpace, "LandPos_isCollision"),
+  LandPos_isComplisWithMinSpacing: ll.imports(
+    Global_NameSpace,
+    "LandPos_isComplisWithMinSpacing"
   ),
 };
 
