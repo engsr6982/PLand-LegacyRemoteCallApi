@@ -40,7 +40,14 @@ jobs:
       - name: Build TypeScript
         run: |
           cd bin/${{ github.event.repository.name }}/ts
+
+          git clone --depth=1 https://github.com/LiteLDev/HelperLib.git
+
+          (Get-Content ./Global.ts) -Replace 'D:/Projects/', '' | Set-Content ./Global.ts
+          (Get-Content ./PLand.ts) -Replace 'D:/Projects/', '' | Set-Content ./PLand.ts
+
           tsc --outDir "../lib"
+
           cd ../../../
 
       - uses: actions/upload-artifact@v4
