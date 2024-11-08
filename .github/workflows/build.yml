@@ -2,7 +2,7 @@ on:
   pull_request:
   push:
   workflow_dispatch:
-  
+
 jobs:
   build:
     runs-on: windows-latest
@@ -12,7 +12,7 @@ jobs:
       - uses: xmake-io/github-action-setup-xmake@v1
         # with:
         #   xmake-version: branch@master
-      
+
       - uses: actions/cache@v4
         with:
           path: |
@@ -29,6 +29,19 @@ jobs:
 
       - run: |
           xmake -v -y
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: |
+          npm install -g typescript
+
+      - name: Build TypeScript
+        run: |
+          cd bin/${{ github.event.repository.name }}/ts
+          tsc --outDir "../lib"
+          cd ../../../
 
       - uses: actions/upload-artifact@v4
         with:

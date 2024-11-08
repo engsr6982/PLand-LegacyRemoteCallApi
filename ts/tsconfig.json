@@ -3,7 +3,6 @@
         "./**.ts"
     ],
     "compilerOptions": {
-        "outDir": "../bin/dist",
         // 保留注释
         "preserveConstEnums": true,
         // 生成 .d.ts 文件
