@@ -1,5 +1,3 @@
-/// <reference path="D:/Projects/HelperLib/src/index.d.ts" />
-
 export const Global_NameSpace = "PLand_LDAPI";
 
 export type LandID = number; // uint64_t

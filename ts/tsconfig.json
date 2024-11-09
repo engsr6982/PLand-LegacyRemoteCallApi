@@ -1,8 +1,10 @@
 {
     "include": [
-        "./**.ts"
+        "./**.ts",
+        "../HelperLib/src/index.d.ts"
     ],
     "compilerOptions": {
+        "outDir": "../bin/PLand-LegacyRemoteCallApi/lib",
         // 保留注释
         "preserveConstEnums": true,
         // 生成 .d.ts 文件

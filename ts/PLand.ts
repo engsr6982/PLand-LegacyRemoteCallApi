@@ -1,4 +1,3 @@
-/// <reference path="D:/Projects/HelperLib/src/index.d.ts" />
 import {
   LandID,
   LandPermType,
