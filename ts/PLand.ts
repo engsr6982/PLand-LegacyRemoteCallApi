@@ -423,6 +423,14 @@ export class LDEvent {
     throw new Error("LDEvent is a static class");
   }
 
+  /**
+   * 监听事件
+   * **注意: 无论事件是否可以拦截，都必须返回一个布尔值, 否则RemoteCall会抛出 `bad_variant_access`**
+   * **`true`: 放行 / `false` 拦截(由事件决定)**
+   * @param event 事件类型
+   * @param callback 回调函数
+   * @returns 是否成功注册
+   */
   static listen<T extends EventType>(
     event: T,
     callback: (...args: EventParams[T]) => boolean
