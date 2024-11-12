@@ -7,7 +7,7 @@ add_repositories("engsr6982-repo https://github.com/engsr6982/xmake-repo.git")
 -- add_requires("levilamina develop") to use develop version
 -- please note that you should add bdslibrary yourself if using dev version
 add_requires("levilamina 0.13.5")
-add_requires("pland 0.2.1")
+add_requires("pland 0.2.4")
 add_requires("legacyremotecall 0.8.3")
 
 if not has_config("vs_runtime") then
