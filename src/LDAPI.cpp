@@ -82,7 +82,9 @@ void Export_Class_PLand() {
     });
 
     RemoteCall::exportAs(NAMESPACE, "PLand_getPermType", [](string const& uuid, int landID, bool ignoreOperator) {
-        return static_cast<int>(land::PLand::getInstance().getPermType(uuid, landID, ignoreOperator));
+        return static_cast<int>(
+            land::PLand::getInstance().getPermType(uuid, static_cast<land::LandID>(landID), ignoreOperator)
+        );
     });
 
     RemoteCall::exportAs(NAMESPACE, "PLand_getLandAt", [](IntPos const& pos) -> int {
