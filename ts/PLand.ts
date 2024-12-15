@@ -140,6 +140,12 @@ export class LandData {
   get mOriginalBuyPrice(): number {
     return LDAPI_IMPORTS.LandData_mOriginalBuyPrice(this.unique_id);
   }
+  get mIsConvertedLand(): boolean {
+    return LDAPI_IMPORTS.LandData_mIsConvertedLand(this.unique_id);
+  }
+  get mOwnerDataIsXUID(): boolean {
+    return LDAPI_IMPORTS.LandData_mOwnerDataIsXUID(this.unique_id);
+  }
 
   getLandPos(): LandPos {
     return this.mPos;

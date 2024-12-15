@@ -277,6 +277,16 @@ void Export_Class_LandData() {
             IntPos{land->mPos.mMax_B, land->mLandDimid}
         };
     });
+    RemoteCall::exportAs(NAMESPACE, "LandData_mIsConvertedLand", [db](int landID) -> bool {
+        auto land = db->getLand(landID);
+        if (!land) return false;
+        return land->mIsConvertedLand;
+    });
+    RemoteCall::exportAs(NAMESPACE, "LandData_mOwnerDataIsXUID", [db](int landID) -> bool {
+        auto land = db->getLand(landID);
+        if (!land) return false;
+        return land->mOwnerDataIsXUID;
+    });
 
     RemoteCall::exportAs(NAMESPACE, "LandData_setSaleing", [db](int id, bool isSale) -> bool {
         auto land = db->getLand(id);

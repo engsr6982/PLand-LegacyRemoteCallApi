@@ -54,6 +54,14 @@ export const LDAPI_IMPORTS = {
     "LandData_mOriginalBuyPrice"
   ),
   LandData_mPos: ll.imports(Global_NameSpace, "LandData_mPos"),
+  LandData_mIsConvertedLand: ll.imports(
+    Global_NameSpace,
+    "LandData_mIsConvertedLand"
+  ),
+  LandData_mOwnerDataIsXUID: ll.imports(
+    Global_NameSpace,
+    "LandData_mOwnerDataIsXUID"
+  ),
   LandData_setSaleing: ll.imports(Global_NameSpace, "LandData_setSaleing"),
   LandData_setIs3DLand: ll.imports(Global_NameSpace, "LandData_setIs3DLand"),
   LandData_setLandOwner: ll.imports(Global_NameSpace, "LandData_setLandOwner"),
