@@ -9,7 +9,8 @@ class MyMod {
 public:
     static MyMod& getInstance();
 
-    MyMod(ll::mod::NativeMod& self) : mSelf(self) {}
+    // MyMod(ll::mod::NativeMod& self) : mSelf(self) {}
+    MyMod() : mSelf(*ll::mod::NativeMod::current()) {}
 
     [[nodiscard]] ll::mod::NativeMod& getSelf() const { return mSelf; }
 
