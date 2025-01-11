@@ -37,14 +37,14 @@ jobs:
       - run: |
           npm install -g typescript
 
-          - name: Build TypeScript to JavaScript Library
-          run: |
-            git clone --depth=1 https://github.com/LiteLDev/HelperLib.git
+      - name: Build TypeScript to JavaScript Library
+        run: |
+          git clone --depth=1 https://github.com/LiteLDev/HelperLib.git
 
-            cd ./ts
-            tsc
+          cd ./ts
+          tsc
 
-            cd ..
+          cd ..
 
       - uses: actions/upload-artifact@v4
         with:
