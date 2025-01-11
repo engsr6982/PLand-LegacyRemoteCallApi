@@ -62,7 +62,7 @@ void Export_Class_PLand() {
     RemoteCall::exportAs(
         NAMESPACE,
         "PLand_setPlayerSettings",
-        [](string const& uuid, std::unordered_map<string, bool> const& settings) -> bool {
+        [](string const& uuid, std::unordered_map<string, bool> settings) -> bool {
             try {
                 // unordered_map<string, bool> -> json -> struct
                 auto s = land::PlayerSettings{};
