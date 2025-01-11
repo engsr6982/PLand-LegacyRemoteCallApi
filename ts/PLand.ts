@@ -35,6 +35,7 @@ export type LandPermTable = {
   /** 允许攻击末地水晶 */ allowAttackEnderCrystal: boolean;
   /** 允许破坏盔甲架 */ allowDestroyArmorStand: boolean;
   /** 允许液体流动 */ allowLiquidFlow: boolean;
+  /** 允许幽匿尖啸体生长 */ allowSculkBlockGrowth: boolean;
 
   /** 使用铁砧 */ useAnvil: boolean;
   /** 使用木桶 */ useBarrel: boolean;
@@ -240,6 +241,13 @@ export class LandData {
   }
 }
 
+
+export type PlayerSettings = {
+  /** 是否显示进入领地提示 */ showEnterLandTitle: boolean;
+  /** 是否持续显示底部提示 */ showBottomContinuedTip: boolean;
+}
+
+
 export class PLand {
   constructor() {
     throw new Error("PLand is a static class");
@@ -255,6 +263,18 @@ export class PLand {
 
   static removeOperator(uuid: string): boolean {
     return LDAPI_IMPORTS.PLand_removeOperator(uuid);
+  }
+
+  static hasPlayerSettings(uuid: string): boolean {
+    return LDAPI_IMPORTS.PLand_hasPlayerSettings(uuid);
+  }
+
+  static getPlayerSettings(uuid: string): PlayerSettings {
+    return LDAPI_IMPORTS.PLand_getPlayerSettings(uuid);
+  }
+
+  static setPlayerSettings(uuid: string, settings: PlayerSettings): boolean {
+    return LDAPI_IMPORTS.PLand_setPlayerSettings(uuid, settings);
   }
 
   static hasLand(id: LandID): boolean {

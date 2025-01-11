@@ -1,7 +1,7 @@
 #include "ll/api/event/Event.h"
-#include "ll/api/utils/HashUtils.h"
 #include "ll/api/event/EventBus.h"
 #include "ll/api/event/ListenerBase.h"
+#include "ll/api/utils/HashUtils.h"
 #include "mc/world/actor/player/Player.h"
 #include "mc/world/level/BlockPos.h"
 #include "pland/Global.h"
@@ -14,6 +14,7 @@
 #include <unordered_map>
 #include <utility>
 #include <vector>
+
 
 #include "RemoteCallAPI.h"
 
@@ -34,6 +35,49 @@ void Export_Class_PLand() {
     RemoteCall::exportAs(NAMESPACE, "PLand_removeOperator", [](string const& uuid) -> bool {
         return land::PLand::getInstance().removeOperator(uuid);
     });
+
+    RemoteCall::exportAs(NAMESPACE, "PLand_hasPlayerSettings", [](string const& uuid) -> bool {
+        return land::PLand::getInstance().hasPlayerSettings(uuid);
+    });
+
+    RemoteCall::exportAs(
+        NAMESPACE,
+        "PLand_getPlayerSettings",
+        [](string const& uuid) -> std::unordered_map<string, bool> {
+            try {
+                // struct -> json -> unordered_map<string, bool>
+                auto settings = land::PLand::getInstance().getPlayerSettings(uuid);
+                auto v        = std::unordered_map<string, bool>();
+
+                auto j = land::JSON::structTojson(*settings);
+                land::JSON::jsonToStructNoMerge(j, v);
+
+                return v;
+            } catch (...) {
+                return std::unordered_map<string, bool>();
+            }
+        }
+    );
+
+    RemoteCall::exportAs(
+        NAMESPACE,
+        "PLand_setPlayerSettings",
+        [](string const& uuid, std::unordered_map<string, bool> const& settings) -> bool {
+            try {
+                // unordered_map<string, bool> -> json -> struct
+                auto s = land::PlayerSettings{};
+
+                auto j = land::JSON::structTojson(settings);
+                land::JSON::jsonToStructNoMerge(j, s);
+
+                return land::PLand::getInstance().setPlayerSettings(uuid, s);
+            } catch (...) {
+                return false;
+            }
+        }
+    );
+
+
     RemoteCall::exportAs(NAMESPACE, "PLand_hasLand", [](int id) -> bool {
         return land::PLand::getInstance().hasLand(id);
     });
