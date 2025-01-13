@@ -7,9 +7,9 @@ add_repositories("engsr6982-repo https://github.com/engsr6982/xmake-repo.git")
 -- add_requires("levilamina develop") to use develop version
 -- please note that you should add bdslibrary yourself if using dev version
 if is_config("target_type", "server") then
-    add_requires("levilamina 1.0.0-rc.2", {configs = {target_type = "server"}})
+    add_requires("levilamina 1.0.0-rc.3", {configs = {target_type = "server"}})
 else
-    add_requires("levilamina 1.0.0-rc.2", {configs = {target_type = "client"}})
+    add_requires("levilamina 1.0.0-rc.3", {configs = {target_type = "client"}})
 end
 
 add_requires("levibuildscript")
