@@ -153,11 +153,10 @@ void Export_Class_PLand() {
         return li;
     });
 
-    RemoteCall::exportAs(NAMESPACE, "PLand_refreshLandRange", [](int id) -> bool {
+    RemoteCall::exportAs(NAMESPACE, "PLand_refreshLandRange", [](int id) -> void {
         auto& inst = land::PLand::getInstance();
         auto  land = inst.getLand(id);
-        if (!land) return false;
-        return inst.refreshLandRange(land);
+        if (land) inst.refreshLandRange(land);
     });
 }
 
@@ -320,6 +319,11 @@ void Export_Class_LandData() {
             IntPos{land->mPos.mMin_A, land->mLandDimid},
             IntPos{land->mPos.mMax_B, land->mLandDimid}
         };
+    });
+    RemoteCall::exportAs(NAMESPACE, "LandData_mTeleportPos", [db](int landID) -> IntPos {
+        auto land = db->getLand(landID);
+        if (!land) return IntPos{{}, 0};
+        return IntPos{land->mTeleportPos, land->mLandDimid};
     });
     RemoteCall::exportAs(NAMESPACE, "LandData_mIsConvertedLand", [db](int landID) -> bool {
         auto land = db->getLand(landID);

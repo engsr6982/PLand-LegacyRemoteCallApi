@@ -16,9 +16,18 @@ export const LDAPI_IMPORTS = {
   PLand_isOperator: ll.imports(Global_NameSpace, "PLand_isOperator"),
   PLand_addOperator: ll.imports(Global_NameSpace, "PLand_addOperator"),
   PLand_removeOperator: ll.imports(Global_NameSpace, "PLand_removeOperator"),
-  PLand_hasPlayerSettings: ll.imports(Global_NameSpace, "PLand_hasPlayerSettings"),
-  PLand_getPlayerSettings: ll.imports(Global_NameSpace, "PLand_getPlayerSettings"),
-  PLand_setPlayerSettings: ll.imports(Global_NameSpace, "PLand_setPlayerSettings"),
+  PLand_hasPlayerSettings: ll.imports(
+    Global_NameSpace,
+    "PLand_hasPlayerSettings"
+  ),
+  PLand_getPlayerSettings: ll.imports(
+    Global_NameSpace,
+    "PLand_getPlayerSettings"
+  ),
+  PLand_setPlayerSettings: ll.imports(
+    Global_NameSpace,
+    "PLand_setPlayerSettings"
+  ),
   PLand_getLand: ll.imports(Global_NameSpace, "PLand_getLand"),
   PLand_removeLand: ll.imports(Global_NameSpace, "PLand_removeLand"),
   PLand_hasLand: ll.imports(Global_NameSpace, "PLand_hasLand"),
@@ -57,6 +66,7 @@ export const LDAPI_IMPORTS = {
     "LandData_mOriginalBuyPrice"
   ),
   LandData_mPos: ll.imports(Global_NameSpace, "LandData_mPos"),
+  LandData_mTeleportPos: ll.imports(Global_NameSpace, "LandData_mTeleportPos"),
   LandData_mIsConvertedLand: ll.imports(
     Global_NameSpace,
     "LandData_mIsConvertedLand"

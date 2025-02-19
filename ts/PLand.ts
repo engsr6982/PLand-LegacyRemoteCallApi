@@ -19,7 +19,7 @@ export type LandPermTable = {
   /** 允许放置 [x] */ allowPlace: boolean;
   /** 允许攻击玩家 */ allowAttackPlayer: boolean;
   /** 允许攻击动物 */ allowAttackAnimal: boolean;
-  /** 允许攻击怪物 */ allowAttackMob: boolean;
+  /** 允许攻击怪物 */ allowAttackMonster: boolean;
   /** 允许打开箱子 */ allowOpenChest: boolean;
   /** 允许拾取物品 */ allowPickupItem: boolean;
   /** 允许投掷雪球 */ allowThrowSnowball: boolean;
@@ -36,6 +36,8 @@ export type LandPermTable = {
   /** 允许破坏盔甲架 */ allowDestroyArmorStand: boolean;
   /** 允许液体流动 */ allowLiquidFlow: boolean;
   /** 允许幽匿尖啸体生长 */ allowSculkBlockGrowth: boolean;
+  /** 允许怪物生成 */ allowMonsterSpawn: boolean;
+  /** 允许动物生成 */ allowAnimalSpawn: boolean;
 
   /** 使用铁砧 */ useAnvil: boolean;
   /** 使用木桶 */ useBarrel: boolean;
@@ -103,6 +105,9 @@ export class LandData {
       throw new Error("Invalid LandPos");
     }
     return new LandPos(v[0], v[1]);
+  }
+  get mTeleportPos(): IntPos {
+    return LDAPI_IMPORTS.LandData_mTeleportPos(this.unique_id);
   }
   get mLandID(): number {
     return LDAPI_IMPORTS.LandData_mLandID(this.unique_id);
@@ -241,12 +246,10 @@ export class LandData {
   }
 }
 
-
 export type PlayerSettings = {
   /** 是否显示进入领地提示 */ showEnterLandTitle: boolean;
   /** 是否持续显示底部提示 */ showBottomContinuedTip: boolean;
-}
-
+};
 
 export class PLand {
   constructor() {
@@ -370,9 +373,9 @@ export class PLand {
     }
   }
 
-  static refreshLandRange(land: LandData): boolean {
+  static refreshLandRange(land: LandData): void {
     // @ts-ignore
-    return LDAPI_IMPORTS.PLand_refreshLandRange(land.unique_id);
+    LDAPI_IMPORTS.PLand_refreshLandRange(land.unique_id);
   }
 }
 

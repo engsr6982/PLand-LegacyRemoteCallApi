@@ -13,7 +13,7 @@ else
 end
 
 add_requires("levibuildscript")
-add_requires("pland 0.4.0-rc.1")
+add_requires("pland 0.5.0")
 add_requires("legacyremotecall 0.9.0-rc.1")
 
 if not has_config("vs_runtime") then
