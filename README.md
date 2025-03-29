@@ -3,7 +3,8 @@
 PLand 的 LegacyRemoteCallApi 实现，用于在 LegacyScriptEngine-QuickJs 中调用 PLand 的 API。
 
 > **注意：**  
-> 本项目仅对 PLand C++ API 进行封装，不包含 PLand 的任何代码，请确保您已经安装了 PLand。
+> 本项目仅对 PLand C++ API 进行封装，不包含 PLand 的任何代码，请确保您已经安装了 PLand。  
+> 由于引擎限制，无法做到原生持有 Native 对象，因此采用了一些折衷方案，对于大型项目存在性能问题，建议大型项目使用 C++ API。
 
 ## 示例
 
