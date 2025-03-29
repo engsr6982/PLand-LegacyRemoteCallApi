@@ -6,6 +6,9 @@
 #include "mc/world/level/BlockPos.h"
 #include "pland/Global.h"
 #include "pland/LandData.h"
+
+#include "bsci/GeometryGroup.h"
+
 #include "pland/LandEvent.h"
 #include "pland/LandPos.h"
 #include "pland/PLand.h"
@@ -40,37 +43,26 @@ void Export_Class_PLand() {
         return land::PLand::getInstance().hasPlayerSettings(uuid);
     });
 
-    RemoteCall::exportAs(
-        NAMESPACE,
-        "PLand_getPlayerSettings",
-        [](string const& uuid) -> std::unordered_map<string, bool> {
-            try {
-                // struct -> json -> unordered_map<string, bool>
-                auto settings = land::PLand::getInstance().getPlayerSettings(uuid);
-                auto v        = std::unordered_map<string, bool>();
-
-                auto j = land::JSON::structTojson(*settings);
-                land::JSON::jsonToStructNoMerge(j, v);
-
-                return v;
-            } catch (...) {
-                return std::unordered_map<string, bool>();
-            }
+    RemoteCall::exportAs(NAMESPACE, "PLand_getPlayerSettings", [](string const& uuid) -> std::string {
+        try {
+            // struct -> json -> string
+            auto settings = land::PLand::getInstance().getPlayerSettings(uuid);
+            auto j        = land::JSON::structTojson(*settings);
+            return j.dump();
+        } catch (...) {
+            return {};
         }
-    );
-
+    });
     RemoteCall::exportAs(
         NAMESPACE,
         "PLand_setPlayerSettings",
-        [](string const& uuid, std::unordered_map<string, bool> settings) -> bool {
+        [](string const& uuid, std::string const& jsonStr) -> bool {
             try {
-                // unordered_map<string, bool> -> json -> struct
-                auto s = land::PlayerSettings{};
-
-                auto j = land::JSON::structTojson(settings);
-                land::JSON::jsonToStructNoMerge(j, s);
-
-                return land::PLand::getInstance().setPlayerSettings(uuid, s);
+                // jsonStr -> json -> struct
+                auto json = nlohmann::json::parse(jsonStr);
+                auto set  = land::PlayerSettings{};
+                land::JSON::jsonToStructNoMerge(json, set);
+                return land::PLand::getInstance().setPlayerSettings(uuid, std::move(set));
             } catch (...) {
                 return false;
             }
@@ -247,6 +239,15 @@ void Export_Class_LandPos() {
             return land::LandPos::isComplisWithMinSpacing(p1, p2, ignoreY);
         }
     );
+    RemoteCall::exportAs(
+        NAMESPACE,
+        "LandPos_isContain",
+        [](IntPos const& a, IntPos const& b, IntPos const& c, IntPos const& d) -> bool {
+            auto ab1 = Make(a, b);
+            auto ab2 = Make(c, d);
+            return land::LandPos::isContain(ab1, ab2);
+        }
+    );
 }
 
 
@@ -334,6 +335,84 @@ void Export_Class_LandData() {
         auto land = db->getLand(landID);
         if (!land) return false;
         return land->mOwnerDataIsXUID;
+    });
+    RemoteCall::exportAs(NAMESPACE, "LandData_mParentLandID", [db](int landID) -> int {
+        auto land = db->getLand(landID);
+        if (!land) return -1;
+        return land->mParentLandID;
+    });
+    RemoteCall::exportAs(NAMESPACE, "LandData_mSubLandIDs", [db](int landID) -> std::vector<int> {
+        auto land = db->getLand(landID);
+        if (!land) return {};
+        std::vector<int> res;
+        res.reserve(land->mSubLandIDs.size());
+        for (auto& i : land->mSubLandIDs) {
+            res.push_back(i); // int64 to int
+        }
+        return res;
+    });
+
+
+    RemoteCall::exportAs(NAMESPACE, "LandData_hasParentLand", [db](int id) -> bool {
+        auto land = db->getLand(id);
+        if (!land) return false;
+        return land->hasParentLand();
+    });
+    RemoteCall::exportAs(NAMESPACE, "LandData_hasSubLand", [db](int id) -> bool {
+        auto land = db->getLand(id);
+        if (!land) return false;
+        return land->hasSubLand();
+    });
+    RemoteCall::exportAs(NAMESPACE, "LandData_isSubLand", [db](int id) -> bool {
+        auto land = db->getLand(id);
+        if (!land) return false;
+        return land->isSubLand();
+    });
+    RemoteCall::exportAs(NAMESPACE, "LandData_isParentLand", [db](int id) -> bool {
+        auto land = db->getLand(id);
+        if (!land) return false;
+        return land->isParentLand();
+    });
+    RemoteCall::exportAs(NAMESPACE, "LandData_isMixLand", [db](int id) -> bool {
+        auto land = db->getLand(id);
+        if (!land) return false;
+        return land->isMixLand();
+    });
+    RemoteCall::exportAs(NAMESPACE, "LandData_isOrdinaryLand", [db](int id) -> bool {
+        auto land = db->getLand(id);
+        if (!land) return false;
+        return land->isOrdinaryLand();
+    });
+    RemoteCall::exportAs(NAMESPACE, "LandData_canCreateSubLand", [db](int id) -> bool {
+        auto land = db->getLand(id);
+        if (!land) return false;
+        return land->canCreateSubLand();
+    });
+    RemoteCall::exportAs(NAMESPACE, "LandData_getParentLand", [db](int id) -> int {
+        auto land = db->getLand(id);
+        if (!land) return -1;
+        return land->getParentLand()->getLandID();
+    });
+    RemoteCall::exportAs(NAMESPACE, "LandData_getSubLands", [db](int id) -> std::vector<int> {
+        auto land = db->getLand(id);
+        if (!land) return {};
+        auto             lands = land->getSubLands();
+        std::vector<int> res;
+        res.reserve(lands.size());
+        for (auto& i : lands) {
+            res.push_back(i->getLandID());
+        }
+        return res;
+    });
+    RemoteCall::exportAs(NAMESPACE, "LandData_getNestedLevel", [db](int id) -> int {
+        auto land = db->getLand(id);
+        if (!land) return 0;
+        return land->getNestedLevel();
+    });
+    RemoteCall::exportAs(NAMESPACE, "LandData_getRootLand", [db](int id) -> int {
+        auto land = db->getLand(id);
+        if (!land) return -1;
+        return land->getRootLand()->getLandID();
     });
 
     RemoteCall::exportAs(NAMESPACE, "LandData_setSaleing", [db](int id, bool isSale) -> bool {
@@ -478,9 +557,9 @@ void Export_LDEvents() {
                     (Player*, int, IntPos, IntPos, bool),
                     (&ev.getPlayer(),
                      ev.getPrice(),
-                     IntPos{ev.getLandSelectorData()->mPos.mMin_A, ev.getLandSelectorData()->mDimid},
-                     IntPos{ev.getLandSelectorData()->mPos.mMax_B, ev.getLandSelectorData()->mDimid},
-                     ev.getLandSelectorData()->mDraw3D),
+                     IntPos{ev.getSelector()->getPointA().value(), ev.getSelector()->getDimensionId()},
+                     IntPos{ev.getSelector()->getPointB().value(), ev.getSelector()->getDimensionId()},
+                     ev.getSelector()->is3D()),
                     ev.cancel()
                 )
             }

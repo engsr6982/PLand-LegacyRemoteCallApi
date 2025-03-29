@@ -152,6 +152,12 @@ export class LandData {
   get mOwnerDataIsXUID(): boolean {
     return LDAPI_IMPORTS.LandData_mOwnerDataIsXUID(this.unique_id);
   }
+  get mParentLandID(): number {
+    return LDAPI_IMPORTS.LandData_mParentLandID(this.unique_id);
+  }
+  get mSubLandIDs(): number[] {
+    return LDAPI_IMPORTS.LandData_mSubLandIDs(this.unique_id);
+  }
 
   getLandPos(): LandPos {
     return this.mPos;
@@ -244,11 +250,59 @@ export class LandData {
   getPermType(uuid: UUIDs): LandPermType {
     return LDAPI_IMPORTS.LandData_getPermType(this.unique_id, uuid);
   }
+
+  hasParentLand(): boolean {
+    return LDAPI_IMPORTS.LandData_hasParentLand(this.unique_id);
+  }
+  hasSubLand(): boolean {
+    return LDAPI_IMPORTS.LandData_hasSubLand(this.unique_id);
+  }
+  isSubLand(): boolean {
+    return LDAPI_IMPORTS.LandData_isSubLand(this.unique_id);
+  }
+  isParentLand(): boolean {
+    return LDAPI_IMPORTS.LandData_isParentLand(this.unique_id);
+  }
+  isMixLand(): boolean {
+    return LDAPI_IMPORTS.LandData_isMixLand(this.unique_id);
+  }
+  isOrdinaryLand(): boolean {
+    return LDAPI_IMPORTS.LandData_isOrdinaryLand(this.unique_id);
+  }
+  canCreateSubLand(): boolean {
+    return LDAPI_IMPORTS.LandData_canCreateSubLand(this.unique_id);
+  }
+  getParentLand(): LandData | null {
+    const id = LDAPI_IMPORTS.LandData_getParentLand(this.unique_id);
+    if (id === -1) {
+      return null;
+    }
+    return new LandData(id);
+  }
+  getSubLands(): LandData[] {
+    return LDAPI_IMPORTS.LandData_getSubLands(this.unique_id).map(
+      (id: LandID) => new LandData(id)
+    );
+  }
+  getNestedLevel(): number {
+    return LDAPI_IMPORTS.LandData_getNestedLevel(this.unique_id);
+  }
+  getRootLand(): LandData | null {
+    const id = LDAPI_IMPORTS.LandData_getRootLand(this.unique_id);
+    if (id === -1) {
+      return null;
+    }
+    return new LandData(id);
+  }
 }
 
+/**
+ * @warning 请不要增加、删除 key，否则会导致反射失败
+ */
 export type PlayerSettings = {
   /** 是否显示进入领地提示 */ showEnterLandTitle: boolean;
   /** 是否持续显示底部提示 */ showBottomContinuedTip: boolean;
+  /** 玩家语言 */ localeCode: string | "system" | "server";
 };
 
 export class PLand {
@@ -272,12 +326,20 @@ export class PLand {
     return LDAPI_IMPORTS.PLand_hasPlayerSettings(uuid);
   }
 
-  static getPlayerSettings(uuid: string): PlayerSettings {
-    return LDAPI_IMPORTS.PLand_getPlayerSettings(uuid);
+  static getPlayerSettings(uuid: string): PlayerSettings | null {
+    // 由于RemoteCall不支持Varint，这里采用JSON字符串传输
+    const jsonStr = LDAPI_IMPORTS.PLand_getPlayerSettings(uuid);
+    try {
+      return JSON.parse(jsonStr);
+    } catch (e) {
+      logger.error(`Failed to parse player settings: ${jsonStr}`);
+      return null;
+    }
   }
 
   static setPlayerSettings(uuid: string, settings: PlayerSettings): boolean {
-    return LDAPI_IMPORTS.PLand_setPlayerSettings(uuid, settings);
+    const jsonStr = JSON.stringify(settings);
+    return LDAPI_IMPORTS.PLand_setPlayerSettings(uuid, jsonStr);
   }
 
   static hasLand(id: LandID): boolean {
@@ -562,6 +624,19 @@ export class LandPos {
       pos2.mMin_A,
       pos2.mMax_B,
       ignoreY
+    );
+  }
+
+  /**
+   * @brief 判断一个 AABB 区域是否完整包含另一个 AABB 区域
+   * 如果目标 AABB 在源 AABB 内，则返回 true，否则返回 false
+   */
+  static isContain(pos1: LandPos, pos2: LandPos): boolean {
+    return LDAPI_IMPORTS.LandPos_isContain(
+      pos1.mMin_A,
+      pos1.mMax_B,
+      pos2.mMin_A,
+      pos2.mMax_B
     );
   }
 }

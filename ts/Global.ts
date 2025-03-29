@@ -75,6 +75,37 @@ export const LDAPI_IMPORTS = {
     Global_NameSpace,
     "LandData_mOwnerDataIsXUID"
   ),
+  LandData_mParentLandID: ll.imports(
+    Global_NameSpace,
+    "LandData_mParentLandID"
+  ),
+  LandData_mSubLandIDs: ll.imports(Global_NameSpace, "LandData_mSubLandIDs"),
+  LandData_hasParentLand: ll.imports(
+    Global_NameSpace,
+    "LandData_hasParentLand"
+  ),
+  LandData_hasSubLand: ll.imports(Global_NameSpace, "LandData_hasSubLand"),
+  LandData_isSubLand: ll.imports(Global_NameSpace, "LandData_isSubLand"),
+  LandData_isParentLand: ll.imports(Global_NameSpace, "LandData_isParentLand"),
+  LandData_isMixLand: ll.imports(Global_NameSpace, "LandData_isMixLand"),
+  LandData_isOrdinaryLand: ll.imports(
+    Global_NameSpace,
+    "LandData_isOrdinaryLand"
+  ),
+  LandData_canCreateSubLand: ll.imports(
+    Global_NameSpace,
+    "LandData_canCreateSubLand"
+  ),
+  LandData_getParentLand: ll.imports(
+    Global_NameSpace,
+    "LandData_getParentLand"
+  ),
+  LandData_getSubLands: ll.imports(Global_NameSpace, "LandData_getSubLands"),
+  LandData_getNestedLevel: ll.imports(
+    Global_NameSpace,
+    "LandData_getNestedLevel"
+  ),
+  LandData_getRootLand: ll.imports(Global_NameSpace, "LandData_getRootLand"),
   LandData_setSaleing: ll.imports(Global_NameSpace, "LandData_setSaleing"),
   LandData_setIs3DLand: ll.imports(Global_NameSpace, "LandData_setIs3DLand"),
   LandData_setLandOwner: ll.imports(Global_NameSpace, "LandData_setLandOwner"),
@@ -126,6 +157,7 @@ export const LDAPI_IMPORTS = {
     Global_NameSpace,
     "LandPos_isComplisWithMinSpacing"
   ),
+  LandPos_isContain: ll.imports(Global_NameSpace, "LandPos_isContain"),
 };
 
 export type Js_Type =

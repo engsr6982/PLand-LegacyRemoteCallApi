@@ -2,6 +2,7 @@ add_rules("mode.debug", "mode.release")
 
 add_repositories("liteldev-repo https://github.com/LiteLDev/xmake-repo.git")
 add_repositories("engsr6982-repo https://github.com/engsr6982/xmake-repo.git")
+add_repositories("OTOTYAN https://github.com/OEOTYAN/xmake-repo.git")
 
 -- add_requires("levilamina x.x.x") for a specific version
 -- add_requires("levilamina develop") to use develop version
@@ -13,8 +14,9 @@ else
 end
 
 add_requires("levibuildscript")
-add_requires("pland 0.6.0")
+add_requires("pland 0.7.0")
 add_requires("legacyremotecall 0.9.0-rc.1")
+add_requires("bsci 0.1.6") -- fix pland head dependency
 
 if not has_config("vs_runtime") then
     set_runtimes("MD")
@@ -43,7 +45,7 @@ target("PLand-LegacyRemoteCallApi") -- Change this to your mod name.
     add_defines("NOMINMAX", "UNICODE")
     add_files("src/**.cpp")
     add_includedirs("src")
-    add_packages("levilamina", "pland", "legacyremotecall")
+    add_packages("levilamina", "pland", "legacyremotecall", "bsci")
     set_exceptions("none") -- To avoid conflicts with /EHa.
     set_kind("shared")
     set_languages("c++20")
