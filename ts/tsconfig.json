@@ -1,7 +1,7 @@
 {
     "include": [
         "./**.ts",
-        "../HelperLib/src/**/*.d.ts"
+        "../LegacyScriptEngine_API/platforms/javascript/src/**.d.ts"
     ],
     "compilerOptions": {
         "outDir": "../bin/PLand-LegacyRemoteCallApi/lib",

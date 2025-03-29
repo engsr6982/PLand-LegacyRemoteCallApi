@@ -39,7 +39,7 @@ jobs:
 
       - name: Build TypeScript to JavaScript Library
         run: |
-          git clone --depth=1 https://github.com/LiteLDev/HelperLib.git
+          git clone --depth=1 https://github.com/LiteLDev/LegacyScriptEngine_API.git
 
           cd ./ts
           tsc
