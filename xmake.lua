@@ -14,9 +14,8 @@ else
 end
 
 add_requires("levibuildscript")
-add_requires("pland 0.7.0")
+add_requires("pland 0.7.1")
 add_requires("legacyremotecall 0.9.0-rc.1")
-add_requires("bsci 0.1.6") -- fix pland head dependency
 
 if not has_config("vs_runtime") then
     set_runtimes("MD")
@@ -45,7 +44,7 @@ target("PLand-LegacyRemoteCallApi") -- Change this to your mod name.
     add_defines("NOMINMAX", "UNICODE")
     add_files("src/**.cpp")
     add_includedirs("src")
-    add_packages("levilamina", "pland", "legacyremotecall", "bsci")
+    add_packages("levilamina", "pland", "legacyremotecall")
     set_exceptions("none") -- To avoid conflicts with /EHa.
     set_kind("shared")
     set_languages("c++20")

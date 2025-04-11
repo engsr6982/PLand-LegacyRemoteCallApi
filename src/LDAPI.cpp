@@ -7,8 +7,6 @@
 #include "pland/Global.h"
 #include "pland/LandData.h"
 
-#include "bsci/GeometryGroup.h"
-
 #include "pland/LandEvent.h"
 #include "pland/LandPos.h"
 #include "pland/PLand.h"
