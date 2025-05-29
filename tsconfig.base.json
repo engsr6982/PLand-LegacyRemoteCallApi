@@ -1,0 +1,17 @@
+{
+    "include": [
+        "./ts/**.ts",
+        "./LegacyScriptEngine_API/platforms/javascript/src/**.d.ts"
+    ],
+    "compilerOptions": {
+        "rootDir": "./ts",
+        "preserveConstEnums": true,
+        "declaration": true,
+        "target": "ES2022",
+        "skipLibCheck": true,
+        "lib": [
+            "ES2022"
+        ],
+        "types": []
+    }
+}
