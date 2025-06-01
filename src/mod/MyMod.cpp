@@ -4,6 +4,18 @@
 
 #include "ll/api/mod/RegisterHelper.h"
 
+
+namespace ldapi {
+
+extern void Export_Class_PLand();
+extern void Export_Class_LandAABB();
+extern void Export_Class_LandData();
+extern void Export_LDEvents();
+
+
+} // namespace ldapi
+
+
 namespace my_mod {
 
 MyMod& MyMod::getInstance() {
@@ -14,8 +26,10 @@ bool MyMod::load() {
     getSelf().getLogger().debug("Loading...");
     // Code for loading the mod goes here.
 
-    extern void ExportLDAPI();
-    ExportLDAPI();
+    ldapi::Export_Class_PLand();
+    ldapi::Export_Class_LandAABB();
+    ldapi::Export_Class_LandData();
+    ldapi::Export_LDEvents();
 
     return true;
 }

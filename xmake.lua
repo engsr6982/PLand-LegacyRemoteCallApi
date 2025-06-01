@@ -2,19 +2,13 @@ add_rules("mode.debug", "mode.release")
 
 add_repositories("liteldev-repo https://github.com/LiteLDev/xmake-repo.git")
 add_repositories("engsr6982-repo https://github.com/engsr6982/xmake-repo.git")
-add_repositories("OTOTYAN https://github.com/OEOTYAN/xmake-repo.git")
 
 -- add_requires("levilamina x.x.x") for a specific version
 -- add_requires("levilamina develop") to use develop version
 -- please note that you should add bdslibrary yourself if using dev version
-if is_config("target_type", "server") then
-    add_requires("levilamina 1.1.0", {configs = {target_type = "server"}})
-else
-    add_requires("levilamina 1.0.0-rc.3", {configs = {target_type = "client"}})
-end
-
-add_requires("levibuildscript")
-add_requires("pland 0.7.1")
+add_requires("levilamina 1.1.2", {configs = {target_type = "server"}})
+add_requires("levibuildscript 0.3.0")
+add_requires("pland 0.8.1")
 add_requires("legacyremotecall 0.9.0-rc.1")
 
 if not has_config("vs_runtime") then
@@ -41,8 +35,8 @@ target("PLand-LegacyRemoteCallApi") -- Change this to your mod name.
         "/w44738",
         "/w45204"
     )
-    add_defines("NOMINMAX", "UNICODE")
-    add_files("src/**.cpp")
+    add_defines("NOMINMAX", "UNICODE", "_HAS_CXX23=1")
+    add_files("src/**.cpp", "src/**.cc")
     add_includedirs("src")
     add_packages("levilamina", "pland", "legacyremotecall")
     set_exceptions("none") -- To avoid conflicts with /EHa.
