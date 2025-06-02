@@ -1,0 +1,13 @@
+{
+    "entry": "Test.js",
+    "name": "test",
+    "type": "lse-quickjs",
+    "dependencies": [
+        {
+            "name": "legacy-script-engine-quickjs"
+        },
+        {
+            "name": "PLand-LegacyRemoteCallApi"
+        }
+    ]
+}
