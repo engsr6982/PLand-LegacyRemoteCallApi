@@ -6,9 +6,9 @@ add_repositories("engsr6982-repo https://github.com/engsr6982/xmake-repo.git")
 -- add_requires("levilamina x.x.x") for a specific version
 -- add_requires("levilamina develop") to use develop version
 -- please note that you should add bdslibrary yourself if using dev version
-add_requires("levilamina 1.1.2", {configs = {target_type = "server"}})
-add_requires("levibuildscript 0.3.0")
-add_requires("pland 0.8.1")
+add_requires("levilamina 1.2.1", {configs = {target_type = "server"}})
+add_requires("levibuildscript 0.4.0")
+add_requires("pland 0.9.0")
 add_requires("legacyremotecall 0.9.0-rc.1")
 
 if not has_config("vs_runtime") then
