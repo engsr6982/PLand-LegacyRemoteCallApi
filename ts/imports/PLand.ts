@@ -16,6 +16,17 @@ export type PlayerSettings = {
     /** 玩家语言 */ localeCode: string | "system" | "server";
 };
 
+interface VersionMeta {
+    major: number;
+    minor: number;
+    patch: number;
+    build: number;
+    commit: string;
+    snapshot: boolean;
+    release: boolean;
+    version: string;
+}
+
 export class PLand {
     static IMPORTS = {
         PLand_isOperator: ll.imports(ImportNamespace, "PLand_isOperator"),
@@ -50,6 +61,10 @@ export class PLand {
         PLand_refreshLandRange: ll.imports(
             ImportNamespace,
             "PLand_refreshLandRange"
+        ),
+        PLand_getVersionMeta: ll.imports(
+            ImportNamespace,
+            "PLand_getVersionMeta"
         ),
     };
 
@@ -184,6 +199,11 @@ export class PLand {
     static refreshLandRange(land: LandData): void {
         // @ts-ignore
         PLand.IMPORTS.PLand_refreshLandRange(land.unique_id);
+    }
+
+    // v0.10.0
+    static getVersionMeta(): VersionMeta {
+        return JSON.parse(PLand.IMPORTS.PLand_getVersionMeta());
     }
 }
 

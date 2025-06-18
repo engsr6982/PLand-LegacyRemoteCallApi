@@ -1,10 +1,14 @@
 #include "pland/PLand.h"
 #include "ExportDef.h"
 #include "pland/Global.h"
+#include "pland/Version.h"
 #include "pland/utils/JSON.h"
+#include <unordered_map>
+
 
 namespace ldapi {
 
+void Export_PLand_Version_Getter();
 
 void Export_Class_PLand() {
     exportAs("PLand_isOperator", [](string const& uuid) -> bool {
@@ -128,6 +132,21 @@ void Export_Class_PLand() {
         auto& inst = land::PLand::getInstance();
         auto  land = inst.getLand(id);
         if (land) inst.refreshLandRange(land);
+    });
+
+    exportAs("PLand_getVersionMeta", []() -> std::string {
+        static struct {
+            int         major    = PLAND_VERSION_MAJOR;
+            int         minor    = PLAND_VERSION_MINOR;
+            int         patch    = PLAND_VERSION_PATCH;
+            int         build    = PLAND_VERSION_BUILD;
+            std::string commit   = PLAND_COMMIT_HASH;
+            bool        snapshot = PLAND_VERSION_SNAPSHOT;
+            bool        release  = PLAND_VERSION_RELEASE;
+            std::string version  = PLAND_VERSION_STRING;
+        } meta;
+        static auto res = land::JSON::structTojson(meta).dump();
+        return res;
     });
 }
 
