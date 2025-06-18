@@ -15,15 +15,10 @@ export enum LandPermType {
     Guest = 3, // 访客
 }
 
-// 工具函数
+export function isPlainObject(obj: any): obj is object {
+    return obj !== null && typeof obj === "object" && !Array.isArray(obj);
+}
 
-export type JsType =
-    | "String"
-    | "Number"
-    | "Boolean"
-    | "Object"
-    | "Function"
-    | "Symbol"
-    | "Undefined";
-export const IsType = (obj: any, type: JsType) =>
-    Object.prototype.toString.call(obj) === `[object ${type}]`;
+export function isIntPos(obj: any): obj is IntPos {
+    return obj instanceof IntPos;
+}

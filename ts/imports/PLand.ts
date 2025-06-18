@@ -1,6 +1,6 @@
 import {
     ImportNamespace,
-    IsType,
+    isIntPos,
     LandID,
     LandPermType,
     UUIDs,
@@ -54,6 +54,7 @@ export class PLand {
         PLand_getLands1: ll.imports(ImportNamespace, "PLand_getLands1"),
         PLand_getLands2: ll.imports(ImportNamespace, "PLand_getLands2"),
         PLand_getLands3: ll.imports(ImportNamespace, "PLand_getLands3"),
+        PLand_getLands4: ll.imports(ImportNamespace, "PLand_getLands4"),
         PLand_getPermType: ll.imports(ImportNamespace, "PLand_getPermType"),
         PLand_getLandAt: ll.imports(ImportNamespace, "PLand_getLandAt"),
         PLand_getLandAt1: ll.imports(ImportNamespace, "PLand_getLandAt1"),
@@ -124,14 +125,6 @@ export class PLand {
         return PLand.IMPORTS.PLand_hasLand(id);
     }
 
-    static getLand(landID: LandID): LandData | null {
-        const id = PLand.IMPORTS.PLand_getLand(landID);
-        if (id === -1) {
-            return null;
-        }
-        return new LandData(id);
-    }
-
     // 此 API 在 PLand 底层中已标记为废弃函数，将在未来版本中移除，请使用 removeOrdinaryLand() 代替
     static removeLand(landID: LandID): boolean {
         return PLand.IMPORTS.PLand_removeLand(landID);
@@ -182,35 +175,128 @@ export class PLand {
         return PLand.IMPORTS.PLand_removeLandAndTransferSubLands(id);
     }
 
+    static getLand(landID: LandID): LandData | null {
+        const id = PLand.IMPORTS.PLand_getLand(landID);
+        if (id === -1) {
+            return null;
+        }
+        return new LandData(id);
+    }
+
     /**
-     * getLands() // 获取所有领地
-     * getLands(dimid) // 获取指定维度所有领地
-     * getLands(uuid)  // 获取指定玩家所有领地
-     * getLands(uuid, dimid) // 获取指定玩家在指定维度所有领地
+     * 获取所有领地
      */
+    static getLands(): LandData[];
+    /**
+     * 批量获取领地
+     * @param ids id 列表
+     */
+    static getLands(ids: LandID[]): LandData[];
+    /**
+     * 获取指定维度的所有领地
+     * @param dimid 维度 id
+     */
+    static getLands(dimid: number): LandData[];
+    /**
+     * 获取玩家所有的领地
+     * @param uuid 玩家 uuid
+     * @param includeShared 是否包含其它玩家共享的领地(默认false)
+     */
+    static getLands(uuid: UUIDs, includeShared: boolean): LandData[];
+    /**
+     * 获取玩家在指定维度所有的领地
+     * @param uuid 玩家 uuid
+     * @param dimid 维度 id
+     */
+    static getLands(uuid: UUIDs, dimid: number): LandData[];
+
     static getLands(...args: any[]): LandData[] {
-        if (args.length === 0) {
-            // getLands() const;
-            return PLand.IMPORTS.PLand_getLands().map(
+        switch (args.length) {
+            case 0: {
+                // getLands() const;
+                return PLand.IMPORTS.PLand_getLands().map(
+                    (id: LandID) => new LandData(id)
+                );
+            }
+            case 1: {
+                if (Array.isArray(args[0])) {
+                    // getLands(std::vector<LandID> const& ids) const;
+                    return PLand.IMPORTS.PLand_getLands4(args[0]).map(
+                        (id: LandID) => new LandData(id)
+                    );
+                } else if (typeof args[0] === "number") {
+                    // getLands(LandDimid dimid) const;
+                    return PLand.IMPORTS.PLand_getLands1(args[0]).map(
+                        (id: LandID) => new LandData(id)
+                    );
+                }
+            }
+            case 2: {
+                const arg0 = args[0];
+                if (typeof arg0 === "string") {
+                    if (typeof args[1] === "boolean" || args[1] === undefined) {
+                        // getLands(UUIDs const& uuid, bool includeShared = false) const;
+                        const includeShared = args[1] ?? false;
+                        return PLand.IMPORTS.PLand_getLands2(
+                            arg0,
+                            includeShared
+                        ).map((id: LandID) => new LandData(id));
+                    } else {
+                        // getLands(UUIDs const& uuid, LandDimid dimid) const;
+                        return PLand.IMPORTS.PLand_getLands3(arg0, args[1]).map(
+                            (id: LandID) => new LandData(id)
+                        );
+                    }
+                }
+            }
+        }
+        throw new Error("Invalid arguments");
+    }
+
+    /**
+     * 查询指定坐标的领地
+     * @param pos 坐标
+     */
+    static getLandAt(pos: IntPos): LandData | null;
+    /**
+     * 查询指定坐标半径内的领地
+     * @param pos 坐标
+     * @param radius 半径
+     */
+    static getLandAt(pos: IntPos, radius: number): LandData[];
+    /**
+     * 查询 AABB 区域内的领地
+     * @param pos1 min 坐标
+     * @param pos2 max 坐标
+     */
+    static getLandAt(pos1: IntPos, pos2: IntPos): LandData[];
+
+    static getLandAt(
+        pos1: IntPos,
+        radius_or_pos2?: number | IntPos
+    ): LandData | null | LandData[] {
+        if (!isIntPos(pos1)) {
+            throw new Error("Invalid arguments");
+        }
+
+        if (radius_or_pos2 === undefined) {
+            // getLandAt(BlockPos const& pos, LandDimid dimid) const;
+            const id = PLand.IMPORTS.PLand_getLandAt(pos1);
+            if (id === -1) {
+                return null;
+            }
+            return new LandData(id);
+        } else if (typeof radius_or_pos2 === "number") {
+            // getLandAt(BlockPos const& center, int radius, LandDimid dimid) const;
+            return PLand.IMPORTS.PLand_getLandAt1(pos1, radius_or_pos2).map(
                 (id: LandID) => new LandData(id)
             );
-        } else if (args.length === 1 && IsType(args[0], "Number")) {
-            // getLands(LandDimid dimid) const;
-            return PLand.IMPORTS.PLand_getLands1(args[0]).map(
-                (id: LandID) => new LandData(id)
-            );
-        } else if (args.length === 1 && IsType(args[0], "String")) {
-            // getLands(UUIDs const& uuid) const;
-            return PLand.IMPORTS.PLand_getLands2(args[0]).map(
-                (id: LandID) => new LandData(id)
-            );
-        } else if (
-            args.length === 2 &&
-            IsType(args[0], "String") &&
-            IsType(args[1], "Number")
-        ) {
-            // getLands(UUIDs const& uuid, LandDimid dimid) const;
-            return PLand.IMPORTS.PLand_getLands3(args[0], args[1]).map(
+        } else if (isIntPos(radius_or_pos2)) {
+            // getLandAt(BlockPos const& pos1, BlockPos const& pos2, LandDimid dimid) const;
+            if (pos1.dimid != (radius_or_pos2 as IntPos).dimid) {
+                throw new Error("Invalid arguments");
+            }
+            return PLand.IMPORTS.PLand_getLandAt2(pos1, radius_or_pos2).map(
                 (id: LandID) => new LandData(id)
             );
         } else {
@@ -224,39 +310,6 @@ export class PLand {
         ignoreOperator = false
     ): LandPermType {
         return PLand.IMPORTS.PLand_getPermType(uuid, landID, ignoreOperator);
-    }
-
-    /**
-     * getLandAt(intPos) // 查询指定位置所在领地 返回 LandData / null
-     * getLandAt(intPos, radius) // 查询圆形区域内领地 返回 LandData[]
-     * getLandAt(intPos, intPos) // 查询矩形区域内领地 返回 LandData[]
-     */
-    static getLandAt(...args): LandData | null | LandData[] {
-        if (args.length === 1 && IsType(args[0], "Object")) {
-            const id = PLand.IMPORTS.PLand_getLandAt(args[0]);
-            if (id === -1) {
-                return null;
-            }
-            return new LandData(id);
-        } else if (
-            args.length === 2 &&
-            IsType(args[0], "Object") &&
-            IsType(args[1], "Number")
-        ) {
-            return PLand.IMPORTS.PLand_getLandAt1(args[0], args[1]).map(
-                (id: LandID) => new LandData(id)
-            );
-        } else if (
-            args.length === 2 &&
-            IsType(args[0], "Object") &&
-            IsType(args[1], "Object")
-        ) {
-            return PLand.IMPORTS.PLand_getLandAt2(args[0], args[1]).map(
-                (id: LandID) => new LandData(id)
-            );
-        } else {
-            throw new Error("Invalid arguments");
-        }
     }
 
     static refreshLandRange(land: LandData): void {

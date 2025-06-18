@@ -106,8 +106,8 @@ void Export_Class_PLand() {
         return landList;
     });
 
-    exportAs("PLand_getLands2", [](string const& uuid) -> LandList {
-        auto     lands = land::PLand::getInstance().getLands(uuid);
+    exportAs("PLand_getLands2", [](string const& uuid, bool includeShared) -> LandList {
+        auto     lands = land::PLand::getInstance().getLands(uuid, includeShared);
         LandList landList;
         for (auto land : lands) {
             landList.push_back(land->getLandID());
@@ -117,6 +117,15 @@ void Export_Class_PLand() {
 
     exportAs("PLand_getLands3", [](string const& uuid, int dimid) -> LandList {
         auto     lands = land::PLand::getInstance().getLands(uuid, dimid);
+        LandList landList;
+        for (auto land : lands) {
+            landList.push_back(land->getLandID());
+        }
+        return landList;
+    });
+
+    exportAs("PLand_getLands4", [](LandList const& lds) {
+        auto     lands = land::PLand::getInstance().getLands(lds);
         LandList landList;
         for (auto land : lands) {
             landList.push_back(land->getLandID());
