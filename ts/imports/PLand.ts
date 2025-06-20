@@ -137,8 +137,11 @@ export class PLand {
      * @brief 移除普通领地
      */
     static removeOrdinaryLand(land: LandData | LandID): Result<boolean> {
-        // @ts-ignore
-        const id = IsType(land, "Number") ? land : (land as LandData).unique_id;
+        const id =
+            typeof land === "number"
+                ? land
+                : // @ts-ignore
+                  (land as LandData).unique_id;
         return Result.fromBoolResult(
             PLand.IMPORTS.PLand_removeOrdinaryLand(id)
         );
@@ -148,8 +151,11 @@ export class PLand {
      * @brief 移除子领地
      */
     static removeSubLand(land: LandData | LandID): Result<boolean> {
-        // @ts-ignore
-        const id = IsType(land, "Number") ? land : (land as LandData).unique_id;
+        const id =
+            typeof land === "number"
+                ? land
+                : // @ts-ignore
+                  (land as LandData).unique_id;
         return Result.fromBoolResult(PLand.IMPORTS.PLand_removeSubLand(id));
     }
 
@@ -157,8 +163,11 @@ export class PLand {
      * @brief 移除领地和其子领地
      */
     static removeLandAndSubLands(land: LandData | LandID): Result<boolean> {
-        // @ts-ignore
-        const id = IsType(land, "Number") ? land : (land as LandData).unique_id;
+        const id =
+            typeof land === "number"
+                ? land
+                : // @ts-ignore
+                  (land as LandData).unique_id;
         return Result.fromBoolResult(
             PLand.IMPORTS.PLand_removeLandAndSubLands(id)
         );
@@ -170,8 +179,11 @@ export class PLand {
     static removeLandAndPromoteSubLands(
         land: LandData | LandID
     ): Result<boolean> {
-        // @ts-ignore
-        const id = IsType(land, "Number") ? land : (land as LandData).unique_id;
+        const id =
+            typeof land === "number"
+                ? land
+                : // @ts-ignore
+                  (land as LandData).unique_id;
         return Result.fromBoolResult(
             PLand.IMPORTS.PLand_removeLandAndPromoteSubLands(id)
         );
@@ -183,8 +195,11 @@ export class PLand {
     static removeLandAndTransferSubLands(
         land: LandData | LandID
     ): Result<boolean> {
-        // @ts-ignore
-        const id = IsType(land, "Number") ? land : (land as LandData).unique_id;
+        const id =
+            typeof land === "number"
+                ? land
+                : // @ts-ignore
+                  (land as LandData).unique_id;
         return Result.fromBoolResult(
             PLand.IMPORTS.PLand_removeLandAndTransferSubLands(id)
         );

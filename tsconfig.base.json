@@ -12,6 +12,7 @@
         "lib": [
             "ES2022"
         ],
-        "types": []
+        "types": [],
+        "strict": true,
     }
 }
