@@ -3,6 +3,7 @@ import {
     isIntPos,
     LandID,
     LandPermType,
+    Result,
     UUIDs,
 } from "../ImportDef.js";
 import { LandData } from "./LandData.js";
@@ -125,7 +126,9 @@ export class PLand {
         return PLand.IMPORTS.PLand_hasLand(id);
     }
 
-    // 此 API 在 PLand 底层中已标记为废弃函数，将在未来版本中移除，请使用 removeOrdinaryLand() 代替
+    /**
+     * @deprecated 此 API 在 PLand 底层中已标记为废弃函数，将在未来版本中移除，请使用 removeOrdinaryLand() 代替
+     */
     static removeLand(landID: LandID): boolean {
         return PLand.IMPORTS.PLand_removeLand(landID);
     }
@@ -133,46 +136,58 @@ export class PLand {
     /**
      * @brief 移除普通领地
      */
-    static removeOrdinaryLand(land: LandData | LandID): boolean {
+    static removeOrdinaryLand(land: LandData | LandID): Result<boolean> {
         // @ts-ignore
         const id = IsType(land, "Number") ? land : (land as LandData).unique_id;
-        return PLand.IMPORTS.PLand_removeOrdinaryLand(id);
+        return Result.fromBoolResult(
+            PLand.IMPORTS.PLand_removeOrdinaryLand(id)
+        );
     }
 
     /**
      * @brief 移除子领地
      */
-    static removeSubLand(land: LandData | LandID): boolean {
+    static removeSubLand(land: LandData | LandID): Result<boolean> {
         // @ts-ignore
         const id = IsType(land, "Number") ? land : (land as LandData).unique_id;
-        return PLand.IMPORTS.PLand_removeSubLand(id);
+        return Result.fromBoolResult(PLand.IMPORTS.PLand_removeSubLand(id));
     }
 
     /**
      * @brief 移除领地和其子领地
      */
-    static removeLandAndSubLands(land: LandData | LandID): boolean {
+    static removeLandAndSubLands(land: LandData | LandID): Result<boolean> {
         // @ts-ignore
         const id = IsType(land, "Number") ? land : (land as LandData).unique_id;
-        return PLand.IMPORTS.PLand_removeLandAndSubLands(id);
+        return Result.fromBoolResult(
+            PLand.IMPORTS.PLand_removeLandAndSubLands(id)
+        );
     }
 
     /**
      * @brief 移除当前领地并提升子领地为普通领地
      */
-    static removeLandAndPromoteSubLands(land: LandData | LandID): boolean {
+    static removeLandAndPromoteSubLands(
+        land: LandData | LandID
+    ): Result<boolean> {
         // @ts-ignore
         const id = IsType(land, "Number") ? land : (land as LandData).unique_id;
-        return PLand.IMPORTS.PLand_removeLandAndPromoteSubLands(id);
+        return Result.fromBoolResult(
+            PLand.IMPORTS.PLand_removeLandAndPromoteSubLands(id)
+        );
     }
 
     /**
      * @brief 移除当前领地并移交子领地给当前领地的父领地
      */
-    static removeLandAndTransferSubLands(land: LandData | LandID): boolean {
+    static removeLandAndTransferSubLands(
+        land: LandData | LandID
+    ): Result<boolean> {
         // @ts-ignore
         const id = IsType(land, "Number") ? land : (land as LandData).unique_id;
-        return PLand.IMPORTS.PLand_removeLandAndTransferSubLands(id);
+        return Result.fromBoolResult(
+            PLand.IMPORTS.PLand_removeLandAndTransferSubLands(id)
+        );
     }
 
     static getLand(landID: LandID): LandData | null {

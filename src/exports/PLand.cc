@@ -60,30 +60,30 @@ void Export_Class_PLand() {
     });
 
     exportAs("PLand_removeLand", [](int id) -> bool { return land::PLand::getInstance().removeLand(id); });
-    exportAs("PLand_removeOrdinaryLand", [](int id) -> bool {
+    exportAs("PLand_removeOrdinaryLand", [](int id) -> std::string {
         auto ptr    = land::PLand::getInstance().getLand(id);
         auto result = land::PLand::getInstance().removeOrdinaryLand(ptr);
-        return result ? result.value() : false;
+        return result.has_value() ? result.value() ? "__T" : "__F" : result.error();
     });
-    exportAs("PLand_removeSubLand", [](int id) -> bool {
+    exportAs("PLand_removeSubLand", [](int id) -> std::string {
         auto ptr    = land::PLand::getInstance().getLand(id);
         auto result = land::PLand::getInstance().removeSubLand(ptr);
-        return result ? result.value() : false;
+        return result.has_value() ? result.value() ? "__T" : "__F" : result.error();
     });
-    exportAs("PLand_removeLandAndSubLands", [](int id) -> bool {
+    exportAs("PLand_removeLandAndSubLands", [](int id) -> std::string {
         auto ptr    = land::PLand::getInstance().getLand(id);
         auto result = land::PLand::getInstance().removeLandAndSubLands(ptr);
-        return result ? result.value() : false;
+        return result.has_value() ? result.value() ? "__T" : "__F" : result.error();
     });
-    exportAs("PLand_removeLandAndPromoteSubLands", [](int id) -> bool {
+    exportAs("PLand_removeLandAndPromoteSubLands", [](int id) -> std::string {
         auto ptr    = land::PLand::getInstance().getLand(id);
         auto result = land::PLand::getInstance().removeLandAndPromoteSubLands(ptr);
-        return result ? result.value() : false;
+        return result.has_value() ? result.value() ? "__T" : "__F" : result.error();
     });
-    exportAs("PLand_removeLandAndTransferSubLands", [](int id) -> bool {
+    exportAs("PLand_removeLandAndTransferSubLands", [](int id) -> std::string {
         auto ptr    = land::PLand::getInstance().getLand(id);
         auto result = land::PLand::getInstance().removeLandAndTransferSubLands(ptr);
-        return result ? result.value() : false;
+        return result.has_value() ? result.value() ? "__T" : "__F" : result.error();
     });
 
 

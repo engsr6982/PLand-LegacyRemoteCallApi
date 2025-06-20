@@ -22,3 +22,63 @@ export function isPlainObject(obj: any): obj is object {
 export function isIntPos(obj: any): obj is IntPos {
     return obj instanceof IntPos;
 }
+
+/**
+ * Result 类，表示一个可能包含值或错误的类型
+ * 对应 PLand C++ 侧的 Result<T, E>
+ * @template T 值的类型
+ * @template E 错误的类型
+ */
+export class Result<T, E = string> {
+    private readonly _value: T | null;
+    private readonly _error: E | null;
+
+    private constructor(value: T | null, error: E | null) {
+        this._value = value;
+        this._error = error;
+    }
+
+    static Ok<T, E extends string>(value: T): Result<T, E> {
+        return new Result<T, E>(value, null);
+    }
+
+    static Err<T, E extends string>(error: E): Result<T, E> {
+        return new Result<T, E>(null, error);
+    }
+
+    /**
+     * Result<bool, std::string> ==> Result<boolean, string>
+     */
+    static fromBoolResult(n_rsult_bool: string): Result<boolean, string> {
+        switch (n_rsult_bool) {
+            case "__T":
+                return new Result<boolean, string>(true, null);
+            case "__F":
+                return new Result<boolean, string>(false, null);
+            default:
+                return new Result<boolean, string>(null, n_rsult_bool); // exception
+        }
+    }
+
+    hasValue(): boolean {
+        return this._value !== null;
+    }
+
+    hasError(): boolean {
+        return this._error !== null;
+    }
+
+    value(): T {
+        if (!this.hasValue()) {
+            throw new Error("Result has no value");
+        }
+        return this._value as T;
+    }
+
+    error(): E {
+        if (!this.hasError()) {
+            throw new Error("Result has no error");
+        }
+        return this._error as E;
+    }
+}
