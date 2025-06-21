@@ -3,7 +3,9 @@
 #include "pland/Global.h"
 #include "pland/Version.h"
 #include "pland/utils/JSON.h"
+#include <algorithm>
 #include <unordered_map>
+#include <vector>
 
 
 namespace ldapi {
@@ -95,47 +97,60 @@ void Export_Class_PLand() {
     using LandList = std::vector<land::LandID>;
     exportAs("PLand_getLands", []() -> LandList {
         auto     lands = land::PLand::getInstance().getLands();
-        LandList landList;
-        for (auto land : lands) {
-            landList.push_back(land->getLandID());
-        }
-        return landList;
+        LandList result;
+        result.reserve(lands.size());
+        std::transform(lands.begin(), lands.end(), std::back_inserter(result), [](auto& land) {
+            return land->getLandID();
+        });
+        return result;
     });
 
     exportAs("PLand_getLands1", [](int dimid) -> LandList {
         auto     lands = land::PLand::getInstance().getLands(dimid);
-        LandList landList;
-        for (auto land : lands) {
-            landList.push_back(land->getLandID());
-        }
-        return landList;
+        LandList result;
+        result.reserve(lands.size());
+        std::transform(lands.begin(), lands.end(), std::back_inserter(result), [](auto& land) {
+            return land->getLandID();
+        });
+        return result;
     });
 
     exportAs("PLand_getLands2", [](string const& uuid, bool includeShared) -> LandList {
         auto     lands = land::PLand::getInstance().getLands(uuid, includeShared);
-        LandList landList;
-        for (auto land : lands) {
-            landList.push_back(land->getLandID());
-        }
-        return landList;
+        LandList result;
+        result.reserve(lands.size());
+        std::transform(lands.begin(), lands.end(), std::back_inserter(result), [](auto& land) {
+            return land->getLandID();
+        });
+        return result;
     });
 
     exportAs("PLand_getLands3", [](string const& uuid, int dimid) -> LandList {
         auto     lands = land::PLand::getInstance().getLands(uuid, dimid);
-        LandList landList;
-        for (auto land : lands) {
-            landList.push_back(land->getLandID());
-        }
-        return landList;
+        LandList result;
+        result.reserve(lands.size());
+        std::transform(lands.begin(), lands.end(), std::back_inserter(result), [](auto& land) {
+            return land->getLandID();
+        });
+        return result;
     });
 
-    exportAs("PLand_getLands4", [](LandList const& lds) {
-        auto     lands = land::PLand::getInstance().getLands(lds);
-        LandList landList;
-        for (auto land : lands) {
-            landList.push_back(land->getLandID());
-        }
-        return landList;
+    exportAs("PLand_getLands4", [](std::vector<int> const& lds) -> LandList {
+        LandList int64List;
+        int64List.reserve(lds.size());
+        std::transform(lds.begin(), lds.end(), std::back_inserter(int64List), [](int i) {
+            return static_cast<land::LandID>(i);
+        });
+
+        auto lands = land::PLand::getInstance().getLands(int64List);
+
+        LandList result;
+        result.reserve(lands.size());
+        std::transform(lands.begin(), lands.end(), std::back_inserter(result), [](auto& land) {
+            return land->getLandID();
+        });
+
+        return result;
     });
 
     exportAs("PLand_getPermType", [](string const& uuid, int landID, bool ignoreOperator) {
@@ -152,20 +167,22 @@ void Export_Class_PLand() {
 
     exportAs("PLand_getLandAt1", [](IntPos const& pos, int radius) -> LandList {
         auto     lands = land::PLand::getInstance().getLandAt(pos.first, radius, pos.second);
-        LandList li;
-        for (auto land : lands) {
-            li.push_back(land->getLandID());
-        }
-        return li;
+        LandList result;
+        result.reserve(lands.size());
+        std::transform(lands.begin(), lands.end(), std::back_inserter(result), [](auto& land) {
+            return land->getLandID();
+        });
+        return result;
     });
 
     exportAs("PLand_getLandAt2", [](IntPos const& a, IntPos const& b) -> LandList {
         auto     lands = land::PLand::getInstance().getLandAt(a.first, b.first, a.second);
-        LandList li;
-        for (auto land : lands) {
-            li.push_back(land->getLandID());
-        }
-        return li;
+        LandList result;
+        result.reserve(lands.size());
+        std::transform(lands.begin(), lands.end(), std::back_inserter(result), [](auto& land) {
+            return land->getLandID();
+        });
+        return result;
     });
 
     exportAs("PLand_refreshLandRange", [](int id) -> void {
