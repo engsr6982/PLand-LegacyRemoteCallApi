@@ -6,6 +6,7 @@ import {
     Result,
     UUIDs,
 } from "../ImportDef.js";
+import { LandAABB } from "./LandAABB.js";
 import { LandData } from "./LandData.js";
 
 /**
@@ -124,6 +125,32 @@ export class PLand {
 
     static hasLand(id: LandID): boolean {
         return PLand.IMPORTS.PLand_hasLand(id);
+    }
+
+    /**
+     * 创建并添加一个普通领地(会触发事件)
+     * @param aabb 领地范围
+     * @param is3D 是否是3D领地
+     * @param uuid 玩家UUID
+     * @param orginalBuyPrice 原始购买价格(仅记录，用于后续删除领地的退款计算)
+     * @native PLand::addLand()
+     * @event PlayerBuyLandAfterEvent
+     */
+    static createAndAddLand(
+        aabb: LandAABB,
+        is3D: boolean,
+        uuid: UUIDs,
+        orginalBuyPrice: number = 0
+    ): LandData {
+        if (aabb.min.dimid != aabb.max.dimid) {
+            throw new Error("AABB min and max must be in the same dimension");
+        }
+        if (orginalBuyPrice < 0) {
+            throw new Error("Original buy price must be non-negative");
+        }
+        // TODO: Call C++ API
+        // TODO: 由于一些设计问题，此API先不实现，等 PLand 调整逻辑后实现
+        throw new Error("Not implemented");
     }
 
     /**

@@ -53,6 +53,11 @@ void Export_Class_PLand() {
 
     exportAs("PLand_hasLand", [](int id) -> bool { return land::PLand::getInstance().hasLand(id); });
 
+    exportAs("PLand_createAndAddLand", []() -> int {
+        // TODO: Implement
+        return -1;
+    });
+
     exportAs("PLand_getLand", [](int id) -> int {
         auto land = land::PLand::getInstance().getLand(id);
         if (!land) return -1;
