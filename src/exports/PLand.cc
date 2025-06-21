@@ -135,7 +135,7 @@ void Export_Class_PLand() {
         return result;
     });
 
-    exportAs("PLand_getLands4", [](std::vector<int> const& lds) -> LandList {
+    exportAs("PLand_getLands4", [](std::vector<int> lds) -> LandList {
         LandList int64List;
         int64List.reserve(lds.size());
         std::transform(lds.begin(), lds.end(), std::back_inserter(int64List), [](int i) {
