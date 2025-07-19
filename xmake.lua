@@ -1,8 +1,8 @@
 add_rules("mode.debug", "mode.release")
 
 add_repositories("liteldev-repo https://github.com/LiteLDev/xmake-repo.git")
--- add_repositories("engsr6982-repo https://github.com/engsr6982/xmake-repo.git")
-add_repositories("engsr6982-repo-t1 D:/Codes/xmake-repo")
+add_repositories("engsr6982-repo https://github.com/engsr6982/xmake-repo.git")
+-- add_repositories("engsr6982-repo-t1 D:/Codes/xmake-repo")
 
 -- add_requires("levilamina x.x.x") for a specific version
 -- add_requires("levilamina develop") to use develop version
