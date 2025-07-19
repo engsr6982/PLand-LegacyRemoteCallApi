@@ -1,16 +1,17 @@
 add_rules("mode.debug", "mode.release")
 
 add_repositories("liteldev-repo https://github.com/LiteLDev/xmake-repo.git")
-add_repositories("engsr6982-repo https://github.com/engsr6982/xmake-repo.git")
+-- add_repositories("engsr6982-repo https://github.com/engsr6982/xmake-repo.git")
+add_repositories("engsr6982-repo-t1 D:/Codes/xmake-repo")
 
 -- add_requires("levilamina x.x.x") for a specific version
 -- add_requires("levilamina develop") to use develop version
 -- please note that you should add bdslibrary yourself if using dev version
 add_requires("levilamina 1.3.1", {configs = {target_type = "server"}})
-add_requires("levibuildscript 0.4.0")
+add_requires("levibuildscript")
 add_requires("legacyremotecall 0.9.0-rc.1")
 
-local PLandVersion = "0.10.0"
+local PLandVersion = "0.11.0-rc.2"
 add_requires("pland "..PLandVersion)
 
 if not has_config("vs_runtime") then
@@ -47,9 +48,10 @@ target("PLand-LegacyRemoteCallApi") -- Change this to your mod name.
     set_symbols("debug")
 
     on_load(function (target) 
-        local pland_version_major, pland_version_minor, pland_version_patch = PLandVersion:match("^(%d+)%.(%d+)%.(%d+)$")
+        import("core.base.semver")
+        local sem = semver.try_parse(PLandVersion)
         target:add("defines", 'SUPPORTED_PLAND_VERSION="'..PLandVersion..'"')
-        target:add("defines", 'SUPPORTED_PLAND_VERSION_MAJOR='..pland_version_major)
-        target:add("defines", 'SUPPORTED_PLAND_VERSION_MINOR='..pland_version_minor)
-        target:add("defines", 'SUPPORTED_PLAND_VERSION_PATCH='..pland_version_patch)
+        target:add("defines", 'SUPPORTED_PLAND_VERSION_MAJOR='..sem:major())
+        target:add("defines", 'SUPPORTED_PLAND_VERSION_MINOR='..sem:minor())
+        target:add("defines", 'SUPPORTED_PLAND_VERSION_PATCH='..sem:patch())
     end)
