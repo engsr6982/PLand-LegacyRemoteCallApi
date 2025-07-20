@@ -303,10 +303,18 @@ export class Land {
         throw new TypeError("pos2 must be IntPos or number");
     }
 
+    /**
+     * @brief 数据是否被修改
+     * @note 当调用任意 set 方法时，数据会被标记为已修改
+     * @note 调用 save 方法时，数据会被保存到数据库，并重置为未修改
+     */
     isDirty(): boolean {
         return Land.SYMBOLS.Land_isDirty(this.mLandId);
     }
 
+    /**
+     * @brief 获取领地类型
+     */
     getType(): LandType | null {
         const result = Land.SYMBOLS.Land_getType(this.mLandId);
         if (result === -1) {
@@ -315,34 +323,59 @@ export class Land {
         return result as LandType;
     }
 
+    /**
+     * @brief 是否有父领地
+     */
     hasParentLand(): boolean {
         return Land.SYMBOLS.Land_hasParentLand(this.mLandId);
     }
 
+    /**
+     * @brief 是否有子领地
+     */
     hasSubLand(): boolean {
         return Land.SYMBOLS.Land_hasSubLand(this.mLandId);
     }
 
+    /**
+     * @brief 是否为子领地(有父领地、无子领地)
+     */
     isSubLand(): boolean {
         return Land.SYMBOLS.Land_isSubLand(this.mLandId);
     }
 
+    /**
+     * @brief 是否为父领地(有子领地、无父领地)
+     */
     isParentLand(): boolean {
         return Land.SYMBOLS.Land_isParentLand(this.mLandId);
     }
 
+    /**
+     * @brief 是否为混合领地(有父领地、有子领地)
+     */
     isMixLand(): boolean {
         return Land.SYMBOLS.Land_isMixLand(this.mLandId);
     }
 
+    /**
+     * @brief 是否为普通领地(无父领地、无子领地)
+     */
     isOrdinaryLand(): boolean {
         return Land.SYMBOLS.Land_isOrdinaryLand(this.mLandId);
     }
 
+    /**
+     * @brief 是否可以创建子领地
+     * 如果满足嵌套层级限制，则可以创建子领地
+     */
     canCreateSubLand(): boolean {
         return Land.SYMBOLS.Land_canCreateSubLand(this.mLandId);
     }
 
+    /**
+     * @brief 获取父领地
+     */
     getParentLand(): Land | null {
         const result = Land.SYMBOLS.Land_getParentLand(this.mLandId);
         if (result === -1) {
@@ -351,16 +384,25 @@ export class Land {
         return new Land(result);
     }
 
+    /**
+     * @brief 获取子领地(当前领地名下的所有子领地)
+     */
     getSubLands(): Land[] {
         return Land.SYMBOLS.Land_getSubLands(this.mLandId).map(
             (id) => new Land(id)
         );
     }
 
+    /**
+     * @brief 获取嵌套层级(相对于父领地)
+     */
     getNestedLevel(): number {
         return Land.SYMBOLS.Land_getNestedLevel(this.mLandId);
     }
 
+    /**
+     * @brief 获取根领地(即最顶层的普通领地 isOrdinaryLand() == true)
+     */
     getRootLand(): Land | null {
         const result = Land.SYMBOLS.Land_getRootLand(this.mLandId);
         if (result === -1) {
@@ -369,24 +411,36 @@ export class Land {
         return new Land(result);
     }
 
+    /**
+     * @brief 获取从当前领地的根领地出发的所有子领地（包含根和当前领地）
+     */
     getFamilyTree(): Land[] {
         return Land.SYMBOLS.Land_getFamilyTree(this.mLandId).map(
             (id) => new Land(id)
         );
     }
 
+    /**
+     * @brief 获取当前领地及其所有上级父领地（包含自身）
+     */
     getSelfAndAncestors(): Land[] {
         return Land.SYMBOLS.Land_getSelfAndAncestors(this.mLandId).map(
             (id) => new Land(id)
         );
     }
 
+    /**
+     * @brief 获取当前领地及其所有下级子领地（包含自身）
+     */
     getSelfAndDescendants(): Land[] {
         return Land.SYMBOLS.Land_getSelfAndDescendants(this.mLandId).map(
             (id) => new Land(id)
         );
     }
 
+    /**
+     * @brief 获取一个玩家在当前领地所拥有的权限类别
+     */
     getPermType(uuid: UUIDs): LandPermType {
         return Land.SYMBOLS.Land_getPermType(this.mLandId, uuid);
     }
