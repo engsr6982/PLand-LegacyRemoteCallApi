@@ -7,7 +7,93 @@ import {
 } from "../ImportDef.js";
 import { LandAABB } from "./LandAABB.js";
 
-export interface LandPermTable {}
+export interface LandPermTable {
+    /**火焰蔓延*/ allowFireSpread: boolean;
+    /**点击龙蛋*/ allowAttackDragonEgg: boolean;
+    /**耕地退化*/ allowFarmDecay: boolean;
+    /**活塞推动*/ allowPistonPushOnBoundary: boolean;
+    /**红石更新*/ allowRedstoneUpdate: boolean;
+    /**爆炸*/ allowExplode: boolean;
+    /**方块掉落*/ allowBlockFall: boolean;
+    /**允许破坏*/ allowDestroy: boolean;
+    /**允许凋零破坏*/ allowWitherDestroy: boolean;
+    /**允许放置 [x]*/ allowPlace: boolean;
+    /**允许玩家受伤*/ allowPlayerDamage: boolean;
+    /**允许敌对生物受伤*/ allowMonsterDamage: boolean;
+    /**允许友好、中立生物受伤*/ allowPassiveDamage: boolean;
+    /**允许对特殊实体造成伤害(船、矿车、画等)*/ allowSpecialDamage: boolean;
+    /**允许对特殊实体2造成伤害*/ allowCustomSpecialDamage: boolean;
+    /**允许打开箱子*/ allowOpenChest: boolean;
+    /**允许拾取物品*/ allowPickupItem: boolean;
+    /**允许末影人放下方块*/ allowEndermanLeaveBlock: boolean;
+
+    /**允许丢弃物品*/ allowDropItem: boolean;
+    /**允许投掷物*/ allowProjectileCreate: boolean;
+    /**允许骑乘实体*/ allowRideEntity: boolean;
+    /**允许骑乘矿车、船*/ allowRideTrans: boolean;
+    /**允许斧头去皮*/ allowAxePeeled: boolean;
+    /**允许液体流动*/ allowLiquidFlow: boolean;
+    /**允许幽匿尖啸体生长*/ allowSculkBlockGrowth: boolean;
+    /**允许怪物生成*/ allowMonsterSpawn: boolean;
+    /**允许动物生成*/ allowAnimalSpawn: boolean;
+    /**实体交互*/ allowInteractEntity: boolean;
+    /**实体破坏*/ allowActorDestroy: boolean;
+
+    /**使用铁砧*/ useAnvil: boolean;
+    /**使用木桶*/ useBarrel: boolean;
+    /**使用信标*/ useBeacon: boolean;
+    /**使用床*/ useBed: boolean;
+    /**使用钟*/ useBell: boolean;
+    /**使用高炉*/ useBlastFurnace: boolean;
+    /**使用酿造台*/ useBrewingStand: boolean;
+    /**使用营火*/ useCampfire: boolean;
+    /**使用打火石*/ useFlintAndSteel: boolean;
+    /**使用制图台*/ useCartographyTable: boolean;
+    /**使用堆肥桶*/ useComposter: boolean;
+    /**使用工作台*/ useCraftingTable: boolean;
+    /**使用阳光探测器*/ useDaylightDetector: boolean;
+    /**使用发射器*/ useDispenser: boolean;
+    /**使用投掷器*/ useDropper: boolean;
+    /**使用附魔台*/ useEnchantingTable: boolean;
+    /**使用门*/ useDoor: boolean;
+    /**使用栅栏门*/ useFenceGate: boolean;
+    /**使用熔炉*/ useFurnace: boolean;
+    /**使用砂轮*/ useGrindstone: boolean;
+    /**使用漏斗*/ useHopper: boolean;
+    /**使用唱片机*/ useJukebox: boolean;
+    /**使用织布机*/ useLoom: boolean;
+    /**使用切石机*/ useStonecutter: boolean;
+    /**使用音符盒*/ useNoteBlock: boolean;
+    /**使用合成器*/ useCrafter: boolean;
+    /**使用雕纹书架*/ useChiseledBookshelf: boolean;
+    /**吃蛋糕*/ useCake: boolean;
+    /**使用红石比较器*/ useComparator: boolean;
+    /**使用红石中继器*/ useRepeater: boolean;
+    /**使用潜影盒*/ useShulkerBox: boolean;
+    /**使用锻造台*/ useSmithingTable: boolean;
+    /**使用烟熏炉*/ useSmoker: boolean;
+    /**使用活板门*/ useTrapdoor: boolean;
+    /**使用讲台*/ useLectern: boolean;
+    /**使用炼药锅*/ useCauldron: boolean;
+    /**使用拉杆*/ useLever: boolean;
+    /**使用按钮*/ useButton: boolean;
+    /**使用重生锚*/ useRespawnAnchor: boolean;
+    /**使用物品展示框*/ useItemFrame: boolean;
+    /**使用钓鱼竿*/ useFishingHook: boolean;
+    /**使用桶*/ useBucket: boolean;
+    /**使用压力板*/ usePressurePlate: boolean;
+    /**使用盔甲架*/ useArmorStand: boolean;
+    /**使用骨粉*/ useBoneMeal: boolean;
+    /**使用锄头*/ useHoe: boolean;
+    /**使用锹*/ useShovel: boolean;
+    /**使用试炼宝库*/ useVault: boolean;
+    /**使用蜂巢蜂箱*/ useBeeNest: boolean;
+    /**放置船*/ placeBoat: boolean;
+    /**放置矿车*/ placeMinecart: boolean;
+
+    /**编辑花盆*/ editFlowerPot: boolean;
+    /**编辑告示牌*/ editSign: boolean;
+}
 
 export enum LandType {
     Ordinary = 0, // 普通领地(无父、无子)
