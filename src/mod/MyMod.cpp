@@ -10,7 +10,7 @@ namespace ldapi {
 
 extern void Export_Class_LandRegistry();
 extern void Export_Class_LandAABB();
-extern void Export_Class_LandData();
+extern void Export_Class_Land();
 extern void Export_LDEvents();
 
 
@@ -47,7 +47,7 @@ bool MyMod::load() {
 
     ldapi::Export_Class_LandRegistry();
     ldapi::Export_Class_LandAABB();
-    ldapi::Export_Class_LandData();
+    ldapi::Export_Class_Land();
     ldapi::Export_LDEvents();
 
     return true;
