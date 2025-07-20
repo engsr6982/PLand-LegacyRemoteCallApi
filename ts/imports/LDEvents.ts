@@ -49,12 +49,12 @@ type EventParams = {
     ];
     LandOwnerChangeBeforeEvent: [
         playe: Player,
-        newOwner: Player,
+        newOwner: UUIDs,
         landID: LandID
     ];
     LandOwnerChangeAfterEvent: [
         playe: Player,
-        newOwner: Player,
+        newOwner: UUIDs,
         landID: LandID
     ];
     LandRangeChangeBeforeEvent: [

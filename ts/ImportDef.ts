@@ -15,6 +15,10 @@ export enum LandPermType {
     Guest = 3, // 访客
 }
 
+export function importAs(symbol: string): (...args: any[]) => any {
+    return ll.imports(ImportNamespace, symbol);
+}
+
 export function isPlainObject(obj: any): obj is object {
     return obj !== null && typeof obj === "object" && !Array.isArray(obj);
 }
@@ -33,31 +37,9 @@ export class Result<T, E = string> {
     private readonly _value: T | null;
     private readonly _error: E | null;
 
-    private constructor(value: T | null, error: E | null) {
+    constructor(value: T | null, error: E | null) {
         this._value = value;
         this._error = error;
-    }
-
-    static Ok<T, E extends string>(value: T): Result<T, E> {
-        return new Result<T, E>(value, null);
-    }
-
-    static Err<T, E extends string>(error: E): Result<T, E> {
-        return new Result<T, E>(null, error);
-    }
-
-    /**
-     * Result<bool, std::string> ==> Result<boolean, string>
-     */
-    static fromBoolResult(n_rsult_bool: string): Result<boolean, string> {
-        switch (n_rsult_bool) {
-            case "__T":
-                return new Result<boolean, string>(true, null);
-            case "__F":
-                return new Result<boolean, string>(false, null);
-            default:
-                return new Result<boolean, string>(null, n_rsult_bool); // exception
-        }
     }
 
     hasValue(): boolean {

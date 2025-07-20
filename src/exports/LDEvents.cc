@@ -6,15 +6,16 @@
 #include "mc/world/level/BlockPos.h"
 #include "mod/MyMod.h"
 #include "pland/Global.h"
-#include "pland/LandData.h"
-#include "pland/LandEvent.h"
 #include "pland/PLand.h"
-#include "pland/math/LandAABB.h"
+#include "pland/aabb/LandAABB.h"
+#include "pland/land/Land.h"
+#include "pland/land/LandEvent.h"
 #include "pland/utils/JSON.h"
 #include <memory>
 #include <unordered_map>
 #include <utility>
 #include <vector>
+
 
 #include "ExportDef.h"
 
@@ -28,12 +29,12 @@ private:
     std::unordered_map<int64, ll::event::ListenerPtr> mListeners;        // 监听器列表 (key: ScriptEventID)
 
 public:
-    string genListenerID() { return fmt::format("{}_Event_{}", ExportNamespace, mListenerCount++); }
+    std::string genListenerID() { return fmt::format("{}_Event_{}", ExportNamespace, mListenerCount++); }
 
-    void addListener(string const& scriptEventID, ll::event::ListenerPtr listener) {
+    void addListener(std::string const& scriptEventID, ll::event::ListenerPtr listener) {
         mListeners[doHash(scriptEventID)] = std::move(listener);
     }
-    void removeListener(string const& scriptEventID) {
+    void removeListener(std::string const& scriptEventID) {
         ll::event::EventBus::getInstance().removeListener(mListeners[doHash(scriptEventID)]);
         mListeners.erase(doHash(scriptEventID));
     }
@@ -69,11 +70,13 @@ void Export_LDEvents() {
     auto* bus          = &ll::event::EventBus::getInstance();
     auto* eventManager = &ScriptEventManager::getInstance();
 
-    exportAs("ScriptEventManager_genListenerID", [eventManager]() -> string { return eventManager->genListenerID(); });
+    exportAs("ScriptEventManager_genListenerID", [eventManager]() -> std::string {
+        return eventManager->genListenerID();
+    });
 
     exportAs(
         "Event_RegisterListener",
-        [bus, eventManager](string const& eventName, string const& scriptEventID) -> bool {
+        [bus, eventManager](std::string const& eventName, std::string const& scriptEventID) -> bool {
             if (!RemoteCall::hasFunc(eventName, scriptEventID)) {
                 return false;
             }
@@ -107,7 +110,7 @@ void Export_LDEvents() {
                 REGISTER_LISTENER(
                     land::PlayerBuyLandAfterEvent,
                     (Player*, int),
-                    (&ev.getPlayer(), ev.getLandData()->getLandID()),
+                    (&ev.getPlayer(), ev.getLand()->getId()),
                 )
             }
 
@@ -133,7 +136,7 @@ void Export_LDEvents() {
             case doHash("LandMemberChangeBeforeEvent"): {
                 REGISTER_LISTENER(
                     land::LandMemberChangeBeforeEvent,
-                    (Player*, string, int, bool),
+                    (Player*, std::string, int, bool),
                     (&ev.getPlayer(), ev.getTargetPlayer(), ev.getLandID(), ev.isAdd()),
                     ev.cancel()
                 )
@@ -141,7 +144,7 @@ void Export_LDEvents() {
             case doHash("LandMemberChangeAfterEvent"): {
                 REGISTER_LISTENER(
                     land::LandMemberChangeAfterEvent,
-                    (Player*, string, int, bool),
+                    (Player*, std::string, int, bool),
                     (&ev.getPlayer(), ev.getTargetPlayer(), ev.getLandID(), ev.isAdd()),
                 )
             }
@@ -149,16 +152,16 @@ void Export_LDEvents() {
             case doHash("LandOwnerChangeBeforeEvent"): {
                 REGISTER_LISTENER(
                     land::LandOwnerChangeBeforeEvent,
-                    (Player*, Player*, int),
-                    (&ev.getPlayer(), &ev.getNewOwner(), ev.getLandID()),
+                    (Player*, std::string, int),
+                    (&ev.getPlayer(), ev.getNewOwner(), ev.getLandID()),
                     ev.cancel()
                 )
             }
             case doHash("LandOwnerChangeAfterEvent"): {
                 REGISTER_LISTENER(
                     land::LandOwnerChangeAfterEvent,
-                    (Player*, Player*, int),
-                    (&ev.getPlayer(), &ev.getNewOwner(), ev.getLandID()),
+                    (Player*, std::string, int),
+                    (&ev.getPlayer(), ev.getNewOwner(), ev.getLandID()),
                 )
             }
 
@@ -167,9 +170,9 @@ void Export_LDEvents() {
                     land::LandRangeChangeBeforeEvent,
                     (Player*, int, IntPos, IntPos, int, int),
                     (&ev.getPlayer(),
-                     ev.getLandData()->getLandID(),
-                     IntPos{ev.getNewRange().min, ev.getLandData()->getLandDimid()},
-                     IntPos{ev.getNewRange().max, ev.getLandData()->getLandDimid()},
+                     ev.getLand()->getId(),
+                     IntPos{ev.getNewRange().min.as(), ev.getLand()->getDimensionId()},
+                     IntPos{ev.getNewRange().max.as(), ev.getLand()->getDimensionId()},
                      ev.getNeedPay(),
                      ev.getRefundPrice()),
                     ev.cancel()
@@ -180,9 +183,9 @@ void Export_LDEvents() {
                     land::LandRangeChangeAfterEvent,
                     (Player*, int, IntPos, IntPos, int, int),
                     (&ev.getPlayer(),
-                     ev.getLandData()->getLandID(),
-                     IntPos{ev.getNewRange().min, ev.getLandData()->getLandDimid()},
-                     IntPos{ev.getNewRange().max, ev.getLandData()->getLandDimid()},
+                     ev.getLand()->getId(),
+                     IntPos{ev.getNewRange().min.as(), ev.getLand()->getDimensionId()},
+                     IntPos{ev.getNewRange().max.as(), ev.getLand()->getDimensionId()},
                      ev.getNeedPay(),
                      ev.getRefundPrice()),
                 )

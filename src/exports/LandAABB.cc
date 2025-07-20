@@ -1,4 +1,5 @@
-#include "pland/math/LandAABB.h"
+#include "pland/aabb/LandAABB.h"
+
 #include "ExportDef.h"
 
 
@@ -12,8 +13,8 @@ void Export_Class_LandAABB() {
         auto p = Make(a, b);
         p.fix();
         std::vector<IntPos> res = {
-            IntPos{p.min, a.second},
-            IntPos{p.max, b.second}
+            IntPos{p.min.as(), a.second},
+            IntPos{p.max.as(), b.second}
         };
         return res;
     });
@@ -43,7 +44,7 @@ void Export_Class_LandAABB() {
         return p.getVolume();
     });
 
-    exportAs("LandAABB_toString", [](IntPos const& a, IntPos const& b) -> string {
+    exportAs("LandAABB_toString", [](IntPos const& a, IntPos const& b) -> std::string {
         auto p = Make(a, b);
         return p.toString();
     });

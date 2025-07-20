@@ -1,27 +1,27 @@
 #pragma once
+#include "fmt/core.h"
 #include <string>
 
-#include "IRemoteCall.h"
-#include "fmt/core.h"
+#pragma warning(push, 0) // 禁用所有警告
+#include "RemoteCallAPI.h"
+#pragma warning(pop) // 恢复警告状态
+
 
 namespace ldapi {
 
 using IntPos   = std::pair<BlockPos, int>; // pos, dimid
 using FloatPos = std::pair<Vec3, int>;     // pos, dimid
-using string   = std::string;
 
 constexpr auto ExportNamespace = "PLand_LDAPI";
 
-
 #define LDAPI_COLLECT_EXPORT_SYMBOLS
 
-
 template <typename CB>
-inline bool exportAs(string const& fn, CB&& callback) {
+inline bool exportAs(std::string const& sym, CB&& callback) {
 #ifdef LDAPI_COLLECT_EXPORT_SYMBOLS
-    fmt::print("Exporting func: {} | {}\n", ExportNamespace, fn);
+    fmt::print("Exporting func: {} | {}\n", ExportNamespace, sym);
 #endif
-    return RemoteCall::exportAs(ExportNamespace, fn, std::move(callback));
+    return RemoteCall::exportAs(ExportNamespace, sym, std::move(callback));
 }
 
 
