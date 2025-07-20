@@ -1,11 +1,14 @@
 #include "pland/Global.h"
 #include "pland/PLand.h"
 #include "pland/Version.h"
+#include "pland/aabb/LandAABB.h"
+#include "pland/land/Land.h"
 #include "pland/utils/JSON.h"
 #include <algorithm>
 #include <unordered_map>
 #include <vector>
 
+#include "exports/APIHelper.h"
 
 #include "ExportDef.h"
 
@@ -57,10 +60,59 @@ void Export_Class_LandRegistry() {
         return land::PLand::getInstance().getLandRegistry()->hasLand(id);
     });
 
-    // exportAs("LandRegistry_createAndAddLand", []() -> int {
-    //     // TODO: Implement
-    //     return -1;
-    // });
+    exportAs(
+        "LandRegistry_addOrdinaryLand",
+        [](InternalLandAABB iaabb, bool is3D, std::string const& owner) -> std::vector<std::string> {
+            if (iaabb[0].second != iaabb[1].second) {
+                throw std::runtime_error("LandRegistry_addOrdinaryLand: Invalid AABB");
+            }
+            auto dimId = iaabb[0].second;
+            auto aabb  = toCpp<land::LandAABB>(iaabb);
+            aabb.fix();
+
+            auto land   = land::Land::make(aabb, dimId, is3D, owner);
+            auto result = land::PLand::getInstance().getLandRegistry()->addOrdinaryLand(land);
+
+            std::vector<std::string> ret;
+            ret.reserve(2);
+
+            if (result.has_value()) {
+                ret.push_back("success");
+                ret.push_back(std::to_string(land->getId()));
+            } else {
+                ret.push_back("error");
+                ret.push_back(std::to_string(static_cast<int>(result.error())));
+            }
+
+            return ret;
+        }
+    );
+
+    exportAs("LandRegistry_addSubLand", [](int parentLandId, InternalLandAABB iaabb) -> std::vector<std::string> {
+        auto registry  = land::PLand::getInstance().getLandRegistry();
+        auto parentPtr = registry->getLand(parentLandId);
+        if (!parentPtr) {
+            throw std::runtime_error("LandRegistry_addSubLand: Invalid parent land id");
+        }
+        auto aabb = toCpp<land::LandAABB>(iaabb);
+        aabb.fix();
+
+        auto subLand = land::Land::make(aabb, parentPtr->getDimensionId(), true, parentPtr->getOwner());
+        auto result  = registry->addSubLand(parentPtr, subLand);
+
+        std::vector<std::string> ret;
+        ret.reserve(2);
+
+        if (result.has_value()) {
+            ret.push_back("success");
+            ret.push_back(std::to_string(subLand->getId()));
+        } else {
+            ret.push_back("error");
+            ret.push_back(std::to_string(static_cast<int>(result.error())));
+        }
+
+        return ret;
+    });
 
     exportAs("LandRegistry_getLand", [](int id) -> int {
         auto land = land::PLand::getInstance().getLandRegistry()->getLand(id);

@@ -87,6 +87,8 @@ export class LandRegistry {
         LandRegistry_removeLandAndTransferSubLands: importAs(
             "LandRegistry_removeLandAndTransferSubLands"
         ),
+        LandRegistry_addOrdinaryLand: importAs("LandRegistry_addOrdinaryLand"),
+        LandRegistry_addSubLand: importAs("LandRegistry_addSubLand"),
     };
 
     constructor() {
@@ -133,29 +135,64 @@ export class LandRegistry {
     }
 
     /**
-     * 创建并添加一个普通领地(会触发事件)
+     * 创建并添加一个普通领地
      * @param aabb 领地范围
      * @param is3D 是否是3D领地
-     * @param uuid 玩家UUID
-     * @param orginalBuyPrice 原始购买价格(仅记录，用于后续删除领地的退款计算)
-     * @native PLand::addLand()
-     * @event PlayerBuyLandAfterEvent
+     * @param owner 领地拥有者(UUID)
+     * @returns Result<Land, StorageLayerErrorCode> 成功返回 Land，失败返回错误码
      */
-    static createAndAddLand(
+    static createAndAddOrdinaryLand(
         aabb: LandAABB,
         is3D: boolean,
-        uuid: UUIDs,
-        orginalBuyPrice: number = 0
-    ): Land {
+        owner: UUIDs
+    ): Result<Land, StorageLayerErrorCode> {
         if (aabb.min.dimid != aabb.max.dimid) {
             throw new Error("AABB min and max must be in the same dimension");
         }
-        if (orginalBuyPrice < 0) {
-            throw new Error("Original buy price must be non-negative");
+        const result = LandRegistry.IMPORTS.LandRegistry_addOrdinaryLand(
+            [aabb.min, aabb.max],
+            is3D,
+            owner
+        );
+
+        if (result[0] === "success") {
+            return new Result<Land, StorageLayerErrorCode>(
+                new Land(parseInt(result[1])),
+                null
+            );
+        } else {
+            return new Result<Land, StorageLayerErrorCode>(
+                null,
+                parseInt(result[1])
+            );
         }
-        // TODO: Call C++ API
-        // TODO: 由于一些设计问题，此API先不实现，等 PLand 调整逻辑后实现
-        throw new Error("Not implemented");
+    }
+
+    /**
+     * 创建并添加一个子领地
+     * @param subLandRange 子领地范围
+     * @returns Result<Land, StorageLayerErrorCode> 成功返回子领地对象，失败返回错误码
+     */
+    static createAndAddSubLand(
+        parent: Land,
+        subLandRange: LandAABB
+    ): Result<Land, StorageLayerErrorCode> {
+        const result = LandRegistry.IMPORTS.LandRegistry_addSubLand(
+            parent.mLandId,
+            [subLandRange.min, subLandRange.max]
+        );
+
+        if (result[0] === "success") {
+            return new Result<Land, StorageLayerErrorCode>(
+                new Land(parseInt(result[1])),
+                null
+            );
+        } else {
+            return new Result<Land, StorageLayerErrorCode>(
+                null,
+                parseInt(result[1])
+            );
+        }
     }
 
     /**
