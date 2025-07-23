@@ -1,7 +1,7 @@
-/// <reference types="../PLand-LegacyRemoteCallApi/lib/esm/imports/PLand.d.ts" />
+/// <reference types="../PLand-LegacyRemoteCallApi/lib/esm/imports/LandRegistry.d.ts" />
 
-import { PLand } from "./plugins/PLand-LegacyRemoteCallApi/lib/esm/imports/PLand.js";
+import { LandRegistry } from "./plugins/PLand-LegacyRemoteCallApi/lib/esm/imports/LandRegistry.js";
 
-PLand.getLands().map((land) => {
+LandRegistry.getLands().map((land) => {
   logger.info(`Land ID: ${land.mLandID}`);
 });
